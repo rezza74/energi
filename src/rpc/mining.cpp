@@ -494,17 +494,20 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     if (strMode != "template")
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
-    if(!g_connman)
-        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST)
+    {
+        if(!g_connman)
+            throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Energi Core is not connected!");
+        if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+            throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Energi Core is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is downloading blocks...");
+        if (IsInitialBlockDownload())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is downloading blocks...");
 
-    if (!masternodeSync.IsSynced())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is syncing with network...");
+        if (!masternodeSync.IsSynced())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is syncing with network...");
+    }
 
     static unsigned int nTransactionsUpdatedLast;
 

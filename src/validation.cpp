@@ -3344,6 +3344,12 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex)
 {
     AssertLockHeld(cs_main);
+
+    // if we have a block height this far in the future, someone is purposely submitting bad blocks
+    // further this must be rejected before we try to compute a block hash - otherwise we could ask for a DAG/cache way in the future
+    if (block.nHeight > (chainActive.Height() + 100))
+        return state.DoS(100, error("%s: invalid block height", __func__), REJECT_INVALID, "bad-blk-height");
+
     // Check for duplicate
     uint256 hash = block.GetHash();
     BlockMap::iterator miSelf = mapBlockIndex.find(hash);

@@ -397,6 +397,11 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "  \"curtime\" : ttt,                  (numeric) current timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"bits\" : \"xxx\",                 (string) compressed target of next block\n"
             "  \"height\" : n                      (numeric) The height of the next block\n"
+            "  \"backbone\" : {                  (json object) required Energi Backbone payee that must be included in the next block\n"
+            "      \"payee\" : \"xxxx\",             (string) payee address\n"
+            "      \"script\" : \"xxxx\",            (string) payee scriptPubKey\n"
+            "      \"amount\": n                   (numeric) required amount to pay\n"
+            "  },\n"
             "  \"masternode\" : {                  (json object) required masternode payee that must be included in the next block\n"
             "      \"payee\" : \"xxxx\",             (string) payee address\n"
             "      \"script\" : \"xxxx\",            (string) payee scriptPubKey\n"
@@ -489,17 +494,20 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     if (strMode != "template")
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
-    if(!g_connman)
-        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST)
+    {
+        if(!g_connman)
+            throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Energi Core is not connected!");
+        if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+            throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Energi Core is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is downloading blocks...");
+        if (IsInitialBlockDownload())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is downloading blocks...");
 
-    if (!masternodeSync.IsSynced())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is syncing with network...");
+        if (!masternodeSync.IsSynced())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Energi Core is syncing with network...");
+    }
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -686,6 +694,9 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         aMutable.push_back("version/force");
     }
 
+    auto const newBlockHeight = pindexPrev->nHeight + 1;
+    bool const mnPaymentsStarted = (newBlockHeight >= Params().GetConsensus().nMasternodePaymentsStartBlock);
+
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
     result.push_back(Pair("transactions", transactions));
     result.push_back(Pair("coinbaseaux", aux));
@@ -699,10 +710,19 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("sizelimit", (int64_t)MaxBlockSize(fDIP0001ActiveAtTip)));
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
-    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
+    result.push_back(Pair("height", (int64_t)(newBlockHeight)));
+
+    UniValue backboneObj(UniValue::VOBJ);
+    CTxDestination address1;
+    ExtractDestination(pblock->txoutBackbone.scriptPubKey, address1);
+    CBitcoinAddress address2(address1);
+    backboneObj.push_back(Pair("payee", address2.ToString().c_str()));
+    backboneObj.push_back(Pair("script", HexStr(pblock->txoutBackbone.scriptPubKey.begin(), pblock->txoutBackbone.scriptPubKey.end())));
+    backboneObj.push_back(Pair("amount", pblock->txoutBackbone.nValue));
+    result.push_back(Pair("backbone", backboneObj));
 
     UniValue masternodeObj(UniValue::VOBJ);
-    if(pblock->txoutMasternode != CTxOut()) {
+    if(mnPaymentsStarted && (pblock->txoutMasternode != CTxOut())) {
         CTxDestination address1;
         ExtractDestination(pblock->txoutMasternode.scriptPubKey, address1);
         CBitcoinAddress address2(address1);
@@ -711,7 +731,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         masternodeObj.push_back(Pair("amount", pblock->txoutMasternode.nValue));
     }
     result.push_back(Pair("masternode", masternodeObj));
-    result.push_back(Pair("masternode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nMasternodePaymentsStartBlock));
+    result.push_back(Pair("masternode_payments_started", mnPaymentsStarted));
     result.push_back(Pair("masternode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
 
     UniValue superblockObjArray(UniValue::VARR);
@@ -728,7 +748,6 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         }
     }
     result.push_back(Pair("superblock", superblockObjArray));
-    result.push_back(Pair("superblocks_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nSuperblockCycle));
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
 
     return result;

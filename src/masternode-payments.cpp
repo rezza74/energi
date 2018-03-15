@@ -44,27 +44,27 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
-    // verify the Energi foundation address payment
+    // verify the Energi Backbone address payment
     // TODO: is there a better way to search tx outputs?
-    bool isFoundationRewardValueMet = false;
-    CBitcoinAddress foundationAddress(consensusParams.energiFoundationAddress);
-    CKeyID foundationKeyID;
-    if (!foundationAddress.GetKeyID(foundationKeyID))
+    bool isBackboneRewardValueMet = false;
+    CBitcoinAddress backboneAddress(consensusParams.energiBackboneAddress);
+    CKeyID backboneKeyID;
+    if (!backboneAddress.GetKeyID(backboneKeyID))
     {
-        error("Unable to get key ID for Energi Foundation address");
+        error("Unable to get key ID for Energi Backbone address");
     }
-    CScript foundationPubKey = GetScriptForDestination(foundationKeyID);
+    CScript backbonePubKey = GetScriptForDestination(backboneKeyID);
     for (auto const & i : block.vtx[0].vout)
     {
-        if ((i.scriptPubKey == foundationPubKey) && (i.nValue >= consensusParams.nBlockSubsidyFoundation))
+        if ((i.scriptPubKey == backbonePubKey) && (i.nValue >= consensusParams.nBlockSubsidyBackbone))
         {
-            isFoundationRewardValueMet = true;
+            isBackboneRewardValueMet = true;
             break;
         }
     }
-    if (!isFoundationRewardValueMet)
+    if (!isBackboneRewardValueMet)
     {
-        LogPrint("gobject", "IsBlockValueValid -- coinbase does not pay correct Energi Foundation Amount");
+        LogPrint("gobject", "IsBlockValueValid -- coinbase does not pay correct Energi Backbone Amount\n");
         isBlockRewardValueMet = false;
     }
 
@@ -155,7 +155,7 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 
     if (nBlockHeight < consensusParams.nMasternodePaymentsStartBlock)
     {
-        LogPrint("mnpayments", "IsBlockPayeeValid -- No masternode payments yet at height %d (start at %d)", nBlockHeight, consensusParams.nMasternodePaymentsStartBlock);
+        LogPrint("mnpayments", "IsBlockPayeeValid -- No masternode payments yet at height %d (start at %d)\n", nBlockHeight, consensusParams.nMasternodePaymentsStartBlock);
         return true;
     }
     else
@@ -176,7 +176,7 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
     return true;
 }
 
-void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, CTxOut& txoutMasternodeRet, std::vector<CTxOut>& voutSuperblockRet)
+void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, CTxOut& txoutBackboneRet, CTxOut& txoutMasternodeRet, std::vector<CTxOut>& voutSuperblockRet)
 {
     // only create superblocks if spork is enabled AND if superblock is actually triggered
     // (height should be validated inside)
@@ -187,14 +187,16 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             return;
     }
 
-    // FILL BLOCK PAYEE WITH ENERGI FOUNDATION REWARD AND MASTERNODE PAYMENT OTHERWISE
-    mnpayments.FillBlockFoundationReward(txNew, nBlockHeight, blockReward, txoutMasternodeRet);
-    // ONLY START PAYING THE MASTERNODE AFTER THE PAYMENTS START BLOCK
-    if(nBlockHeight + 1 > Params().GetConsensus().nMasternodePaymentsStartBlock) {
+    // add the Energi Backbone payment
+    mnpayments.FillBlockBackbonePayment(txNew, txoutBackboneRet);
+
+    // add the masternode payment if the chain is long enough to start paying masternodes
+    if(nBlockHeight >= Params().GetConsensus().nMasternodePaymentsStartBlock) {
         mnpayments.FillBlockPayee(txNew, nBlockHeight, blockReward, txoutMasternodeRet);
         LogPrint("mnpayments", "FillBlockPayments -- nBlockHeight %d blockReward %lld txoutMasternodeRet %s txNew %s",
                             nBlockHeight, blockReward, txoutMasternodeRet.ToString(), txNew.ToString());
     }
+
     LogPrint("mnpayments", "FillBlockPayments -- nBlockHeight %d blockReward %lld txNew %s",
                             nBlockHeight, blockReward, txNew.ToString());
 }
@@ -231,37 +233,37 @@ bool CMasternodePayments::CanVote(COutPoint outMasternode, int nBlockHeight)
 }
 
 /**
-*   FillBlockFoundationReward
+*   FillBlockBackbonePayment
 *
-*   Add the Energi Foundation reward transaction to the block
+*   Add the Energi Backbone payment transaction to the block
 */
-void CMasternodePayments::FillBlockFoundationReward(CMutableTransaction& txNew, int /*nBlockHeight*/, CAmount /*blockReward*/, CTxOut& txoutFoundationRet)
+void CMasternodePayments::FillBlockBackbonePayment(CMutableTransaction& txNew, CTxOut& txoutBackboneRet)
 {
     auto const & consensus = Params().GetConsensus();
 
     // make sure it's not filled yet
-    txoutFoundationRet = CTxOut();
+    txoutBackboneRet = CTxOut();
 
-    CBitcoinAddress foundationAddress(consensus.energiFoundationAddress);
-    CKeyID foundationKeyID;
-    if (!foundationAddress.GetKeyID(foundationKeyID))
+    CBitcoinAddress backboneAddress(consensus.energiBackboneAddress);
+    CKeyID backboneKeyID;
+    if (!backboneAddress.GetKeyID(backboneKeyID))
     {
-        error("Unable to get key ID for Energi Foundation address");
+        error("Unable to get key ID for Energi Backbone address");
     }
-    CScript payee = GetScriptForDestination(foundationKeyID);
+    CScript payee = GetScriptForDestination(backboneKeyID);
 
-    CAmount foundationPayment = consensus.nBlockSubsidyFoundation;
+    CAmount backbonePayment = consensus.nBlockSubsidyBackbone;
 
-    // split reward between Energi Foundation, masternodes & miners
-    txNew.vout[0].nValue -= foundationPayment;
-    txoutFoundationRet = CTxOut(foundationPayment, payee);
-    txNew.vout.push_back(txoutFoundationRet);
+    // split reward between Energi Backbone, masternodes & miners
+    txNew.vout[0].nValue -= backbonePayment;
+    txoutBackboneRet = CTxOut(backbonePayment, payee);
+    txNew.vout.push_back(txoutBackboneRet);
 
     CTxDestination address1;
     ExtractDestination(payee, address1);
     CBitcoinAddress address2(address1);
 
-    LogPrintf("CMasternodePayments::FillBlockFoundationReward -- Foundation payment %lld to %s\n", foundationPayment, address2.ToString());
+    LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, address2.ToString());
 }
 
 /**

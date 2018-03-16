@@ -24,7 +24,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-    txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    txNew.vin[0].scriptSig = CScript() << 0x1e0ffff0 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
@@ -59,7 +59,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
-// #define ENERGI_MINE_NEW_GENESIS_BLOCK
+//#define ENERGI_MINE_NEW_GENESIS_BLOCK
 #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
 
 #include "dag_singleton.h"
@@ -415,11 +415,11 @@ public:
         nPruneAfterHeight = 1000;
 
 
-        genesis = CreateGenesisBlock(1520544153UL, 11476682, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1521239519UL, 12501313, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0xf2e36a829a5aba8f899aad7fa0087699878de4ac7dd53ce7e8118892623fd6a3");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x75c2ee0d60966f833a512d56e7ffbb46295108219ee37c7f32b0dd90921c34fd");
+        uint256 expectedGenesisHash = uint256S("0x404555947d9a66370f6842c632662b9fae6dd90ef2bf03871af4c4b780ac93f6");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x0340ab5702d1b048c256c496df8b4685d3e1b5fbd56c99077de7b91e6220c79a");
 
         // TODO: mine genesis block for testnet
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -547,10 +547,10 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1519179199UL, 39233383, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1521240281UL, 39305453, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         consensus.hashGenesisBlock = genesis.GetHash();
-        uint256 expectedGenesisHash = uint256S("0xee526c24b04c1280f6149b53ee6de992764d7e6a688982289d170f3fb12127cf");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x40ffe6c8c982e4f5fead706549198fe1a286fc19c6c6778c273a5766f826c484");
+        uint256 expectedGenesisHash = uint256S("0x5c5a96d7284da7a7c250b6ad2f301893e0f0a61bea4d4a5e009c758e4ea7c39a");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x0bb0036bbae578cff5e636a197895f25b7242eeebc0272e91db3ebfb9a73843c");
 
         // TODO: mine genesis block for testnet60x
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -684,11 +684,11 @@ public:
         nDefaultPort = 39797;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1519179675UL, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1521240377UL, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x7b036cef965c972111d0aeb18da333fc856f23e2f0d63cce55df5dfbac69d598");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x75c2ee0d60966f833a512d56e7ffbb46295108219ee37c7f32b0dd90921c34fd");
+        uint256 expectedGenesisHash = uint256S("0x8440b1d07e483f299b80648de88e30cc2ec0129e46315bad1826d0ee92c8b461");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x0340ab5702d1b048c256c496df8b4685d3e1b5fbd56c99077de7b91e6220c79a");
 
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
         if (consensus.hashGenesisBlock != expectedGenesisHash)

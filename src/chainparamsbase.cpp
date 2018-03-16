@@ -64,7 +64,7 @@ public:
     CBaseTestNet60xParams()
     {
         nRPCPort = 29796;
-        strDataDir = "testnet60";
+        strDataDir = "testnet60x1";
     }
 };
 static CBaseTestNet60xParams testNet60xParams;

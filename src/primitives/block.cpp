@@ -68,7 +68,7 @@ namespace
     #pragma pack(pop)
 }
 
-uint256 CBlockHeader::GetPOWHash() const
+uint256 CBlockHeader::GetPOWHash()
 {
     CBlockHeaderTruncatedLE truncatedBlockHeader(*this);
     egihash::h256_t headerHash(&truncatedBlockHeader, sizeof(truncatedBlockHeader));
@@ -86,6 +86,26 @@ uint256 CBlockHeader::GetPOWHash() const
     }
 
     hashMix = uint256(ret.mixhash);
+    return uint256(ret.value);
+}
+
+uint256 CBlockHeader::GetPOWHash() const
+{
+    CBlockHeaderTruncatedLE truncatedBlockHeader(*this);
+    egihash::h256_t headerHash(&truncatedBlockHeader, sizeof(truncatedBlockHeader));
+    egihash::result_t ret;
+    // if we have a DAG loaded, use it
+    auto const & dag = ActiveDAG();
+    if (dag && ((nHeight / egihash::constants::EPOCH_LENGTH) == dag->epoch()))
+    {
+        ret = egihash::full::hash(*dag, headerHash, nNonce);
+    }
+    else // otherwise all we can do is generate a light hash
+    {
+        // TODO: pre-load caches and seed hashes
+        ret = egihash::light::hash(egihash::cache_t(nHeight), headerHash, nNonce);
+    }
+
     return uint256(ret.value);
 }
 

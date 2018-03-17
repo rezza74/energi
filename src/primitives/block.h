@@ -27,7 +27,7 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nHeight;
-    mutable uint256 hashMix;
+    uint256 hashMix;
     uint32_t nNonce;
 
     CBlockHeader()
@@ -69,6 +69,10 @@ public:
 
     /** GetPOWHash() returns the egihash used to satisfy the proof of work condition.
     *       The first time this is computed, the hashMix is stored.
+    */
+    uint256 GetPOWHash();
+
+    /** GetPOWHash() returns the egihash used to satisfy the proof of work condition.
     */
     uint256 GetPOWHash() const;
 

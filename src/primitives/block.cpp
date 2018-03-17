@@ -91,16 +91,6 @@ uint256 CBlockHeader::GetPOWHash() const
 
 uint256 CBlockHeader::GetHash() const
 {
-    if (std::memcmp(hashMix.begin(), &(egihash::empty_h256.b[0]), (std::min)(egihash::empty_h256.hash_size, static_cast<egihash::h256_t::size_type>(hashMix.size()))) == 0)
-    {
-        // nonce is used to populate
-        GetPOWHash();
-        if (std::memcmp(hashMix.begin(), &(egihash::empty_h256.b[0]), (std::min)(egihash::empty_h256.hash_size, static_cast<egihash::h256_t::size_type>(hashMix.size()))) == 0)
-        {
-            error("Can not produce a valid mixhash");
-        }
-    }
-
     // return a Keccak-256 hash of the full block header, including nonce and mixhash
     CBlockHeaderFullLE fullBlockHeader(*this);
     egihash::h256_t blockHash(&fullBlockHeader, sizeof(fullBlockHeader));

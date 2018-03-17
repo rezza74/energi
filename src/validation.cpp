@@ -3363,9 +3363,6 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
             return true;
         }
 
-        if (!CheckBlockHeader(block, state))
-            return false;
-
         // Get prev block index
         CBlockIndex* pindexPrev = NULL;
         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
@@ -3374,10 +3371,15 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         pindexPrev = (*mi).second;
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
+        if (block.nHeight != (pindexPrev->nHeight + 1))
+            return state.DoS(100, error("%s: invalid block height", __func__), REJECT_INVALID, "bad-blk-height");
 
         assert(pindexPrev);
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
             return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
+
+        if (!CheckBlockHeader(block, state))
+            return false;
 
         if (!ContextualCheckBlockHeader(block, state, pindexPrev))
             return false;

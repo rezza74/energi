@@ -243,7 +243,12 @@ void CMasternodePayments::FillBlockBackbonePayment(CMutableTransaction& txNew, C
     txoutBackboneRet = CTxOut(backbonePayment, consensus.energiBackboneScript);
     txNew.vout.push_back(txoutBackboneRet);
 
-    LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, txoutBackboneRet.GetHash().ToString());
+    CTxDestination txdestBackbone;
+    if (ExtractDestination(consensus.energiBackboneScript, txdestBackbone))
+    {
+        CBitcoinAddress backboneAddress(txdestBackbone);
+        LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, backboneAddress.ToString());
+    }
 }
 
 /**

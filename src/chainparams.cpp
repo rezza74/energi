@@ -198,7 +198,7 @@ public:
         strNetworkID = "main";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "TODO: implement me";
+        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("TODO: IMPLEMENT ME") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
@@ -371,7 +371,7 @@ public:
         strNetworkID = "test";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
@@ -509,7 +509,7 @@ public:
         strNetworkID = "test60";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
         // miners get 20% of all coins or 2.4M / 526,000 ~ 4.57
@@ -641,7 +641,7 @@ public:
         strNetworkID = "regtest";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b27ae40d9e9917130210894e50e99f26968faaa4") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85

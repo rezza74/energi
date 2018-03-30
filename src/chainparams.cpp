@@ -304,16 +304,16 @@ public:
 
         vSeeds.push_back(CDNSSeedData("energi.network", "dnsseed.energi.network"));
 
-        // Energi addresses start with 'E'
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,33);
-        // Energi script addresses start with '3'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
-        // Energi private keys start with e'
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,92);
-        // Energi BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        // Energi BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
+        // Energi addresses start with 'N'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,53);
+        // Energi script addresses start with 'R'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,60);
+        // Energi private keys start with 'G'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,106);
+        // Energi BIP32 pubkeys start with 'npub'
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x03)(0xB8)(0xC8)(0x56).convert_to_container<std::vector<unsigned char> >();
+        // Energi BIP32 prvkeys start with 'nprv'
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0xD7)(0xDC)(0x6E)(0x9F).convert_to_container<std::vector<unsigned char> >();
 
         // Energi BIP44 coin type is '5'
         nExtCoinType = 5;

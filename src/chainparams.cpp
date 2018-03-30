@@ -285,7 +285,6 @@ public:
 
         genesis = CreateGenesisBlock(1390095618, 28917698, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        //assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         // TODO: mine genesis block for main net
@@ -299,6 +298,7 @@ public:
         //}
         //#endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 //
+        //assert(valid_genesis_pow);
         //assert(consensus.hashGenesisBlock == expectedGenesisHash);
         //assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -439,7 +439,6 @@ public:
 
         genesis = CreateGenesisBlock(1521239519UL, 12501313, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         uint256 expectedGenesisHash = uint256S("0x404555947d9a66370f6842c632662b9fae6dd90ef2bf03871af4c4b780ac93f6");
@@ -453,6 +452,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -573,7 +573,6 @@ public:
 
         genesis = CreateGenesisBlock(1521240281UL, 39305453, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
         uint256 expectedGenesisHash = uint256S("0x5c5a96d7284da7a7c250b6ad2f301893e0f0a61bea4d4a5e009c758e4ea7c39a");
         uint256 expectedGenesisMerkleRoot = uint256S("0x0bb0036bbae578cff5e636a197895f25b7242eeebc0272e91db3ebfb9a73843c");
@@ -586,6 +585,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -712,7 +712,6 @@ public:
 
         genesis = CreateGenesisBlock(1521320241UL, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         uint256 expectedGenesisHash = uint256S("0x1fa5bf921cdb7d6daa35ceb88da3cbe9b2ae0dbc0c906b6aa8001879ecbe3ea1");
@@ -725,6 +724,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.

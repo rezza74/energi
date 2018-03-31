@@ -33,26 +33,23 @@ static const string strAddressBad("Eta1praZQjyELweyMByXyiREw1ZRsjXzVP");
 #ifdef KEY_TESTS_DUMPINFO
 void dumpKeyInfo(uint256 privkey)
 {
-    CKey key;
-    key.resize(32);
-    memcpy(&secret[0], &privkey, 32);
-    vector<unsigned char> sec;
-    sec.resize(32);
-    memcpy(&sec[0], &secret[0], 32);
-    printf("  * secret (hex): %s\n", HexStr(sec).c_str());
-
     for (int nCompressed=0; nCompressed<2; nCompressed++)
     {
         bool fCompressed = nCompressed == 1;
+
+        CKey key;
+        key.Set(privkey.begin(), privkey.end(), fCompressed);
+
         printf("  * %s:\n", fCompressed ? "compressed" : "uncompressed");
         CBitcoinSecret bsecret;
-        bsecret.SetSecret(secret, fCompressed);
+        bsecret.SetKey(key);
         printf("    * secret (base58): %s\n", bsecret.ToString().c_str());
-        CKey key;
-        key.SetSecret(secret, fCompressed);
-        vector<unsigned char> vchPubKey = key.GetPubKey();
+
+        CPubKey vchPubKey = key.GetPubKey();
+        CKeyID keyID = vchPubKey.GetID();
+        CBitcoinAddress keyAddress(keyID);
         printf("    * pubkey (hex): %s\n", HexStr(vchPubKey).c_str());
-        printf("    * address (base58): %s\n", CBitcoinAddress(vchPubKey).ToString().c_str());
+        printf("    * address (base58): %s\n", CBitcoinAddress(keyAddress).ToString().c_str());
     }
 }
 #endif

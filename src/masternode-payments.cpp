@@ -249,6 +249,10 @@ void CMasternodePayments::FillBlockBackbonePayment(CMutableTransaction& txNew, C
         CBitcoinAddress backboneAddress(txdestBackbone);
         LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, backboneAddress.ToString());
     }
+    else
+    {
+        error("CMasternodePayments::FillBlockBackbonePayment -- Energi Backbone script is not valid.");
+    }
 }
 
 /**

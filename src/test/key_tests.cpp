@@ -18,18 +18,17 @@
 
 using namespace std;
 
-static const string strSecret1     ("Ej3b3UtDHaLBAvnppRbpwzGHhYRBxjRrTvAK9cDYoEctCDVyE298");
-static const string strSecret2     ("EfTHXR9SsWorWr27kqU33gYrzuCnJs5jgMVHNV6RUuCNUCYZbCGo");
-static const string strSecret1C    ("Eegycyw24qQEG88Gxv6NLkbDqL2miwjDZGVHRBVumCxVPMRcGWkq");
-static const string strSecret2C    ("EhcNR2QeFtikrBx4VVa7eBY75xAHPQjsrApGtrQuHSLo8LuuArZv");
-static const CBitcoinAddress addr1 ("ER1oCV1adF3pk3mP4iqZXBGYr4CmQjE8Pb");
-static const CBitcoinAddress addr2 ("ENqqFw8P3DLoY1zvetP4X8qUXmyo8NRFGs");
-static const CBitcoinAddress addr1C("EKMyC5EzKwW4sTioEGgFTbebhtrhFK2miv");
-static const CBitcoinAddress addr2C("ET7cMauEgCGp468V1edL2zupNETJVaDWnw");
+static const string strSecret1     ("4ZZcwP6utR94jqhqXNKeYX19VU5rokGJqNFhaScKNpTRCs5kF6L");
+static const string strSecret2     ("4ZXhhzWHZ4XyYFtbJr4SKVayaRv7994s9uQQ9YHQDGkL46UBYdy");
+static const string strSecret1C    ("Giiyd2Z6RwYbW5yFB37Ji7ReUeYSqKxZiUot6c2t7JTbq8Uo5GqR");
+static const string strSecret2C    ("GiaWfvpG4WbiYxiiRmYAkdAxiYyQ6vc4NJJHAh5PTAWF6Xm9tNmh");
+static const CBitcoinAddress addr1 ("EVpKt56m8W3f4tc3rSSgqVhVqQk817LoeD");
+static const CBitcoinAddress addr2 ("EMptRM8cEE1bLyeHmRBssKybEGrsKEkWiX");
+static const CBitcoinAddress addr1C("EK2PbgCrLPXW76HB84tM7ynZqtVhm8YJtJ");
+static const CBitcoinAddress addr2C("EResuxKDsSzZK2SNvfcn6fTXFnBygDRRb2");
 
 
-static const string strAddressBad("Xta1praZQjyELweyMByXyiREw1ZRsjXzVP");
-
+static const string strAddressBad("Eta1praZQjyELweyMByXyiREw1ZRsjXzVP");
 
 #ifdef KEY_TESTS_DUMPINFO
 void dumpKeyInfo(uint256 privkey)
@@ -71,9 +70,9 @@ BOOST_AUTO_TEST_CASE(key_test1)
     BOOST_CHECK(!baddress1.SetString(strAddressBad));
 
     CKey key1  = bsecret1.GetKey();
-    BOOST_CHECK(key1.IsCompressed() == true);
+    BOOST_CHECK(key1.IsCompressed() == false);
     CKey key2  = bsecret2.GetKey();
-    BOOST_CHECK(key2.IsCompressed() == true);
+    BOOST_CHECK(key2.IsCompressed() == false);
     CKey key1C = bsecret1C.GetKey();
     BOOST_CHECK(key1C.IsCompressed() == true);
     CKey key2C = bsecret2C.GetKey();

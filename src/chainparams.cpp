@@ -304,10 +304,10 @@ public:
 
         vSeeds.push_back(CDNSSeedData("energi.network", "dnsseed.energi.network"));
 
-        // Energi addresses start with 'N'
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,53);
-        // Energi script addresses start with 'R'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,60);
+        // Energi addresses start with 'E'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,33);
+        // Energi script addresses start with 'N'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,53);
         // Energi private keys start with 'G'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,106);
         // Energi BIP32 pubkeys start with 'npub'

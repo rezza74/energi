@@ -198,7 +198,7 @@ public:
         strNetworkID = "main";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("TODO: IMPLEMENT ME") << OP_EQUAL;
+        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b051bdceb44b28bb36ef2add5ec07ccbc64708c2") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85

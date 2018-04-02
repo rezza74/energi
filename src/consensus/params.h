@@ -8,6 +8,7 @@
 
 #include "amount.h"
 #include "uint256.h"
+#include "script/script.h"
 #include <map>
 #include <string>
 
@@ -86,7 +87,7 @@ struct Params {
     CAmount nRegularTreasuryBudget;
     CAmount nSpecialTreasuryBudget;
     uint32_t nSpecialTreasuryBudgetBlock;
-    std::string energiBackboneAddress;
+    CScript energiBackboneScript;
 };
 } // namespace Consensus
 

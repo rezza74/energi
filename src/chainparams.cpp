@@ -198,7 +198,7 @@ public:
         strNetworkID = "main";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "TODO: implement me";
+        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("TODO: IMPLEMENT ME") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
@@ -285,7 +285,6 @@ public:
 
         genesis = CreateGenesisBlock(1390095618, 28917698, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        //assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         // TODO: mine genesis block for main net
@@ -299,6 +298,7 @@ public:
         //}
         //#endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 //
+        //assert(valid_genesis_pow);
         //assert(consensus.hashGenesisBlock == expectedGenesisHash);
         //assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -306,14 +306,14 @@ public:
 
         // Energi addresses start with 'E'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,33);
-        // Energi script addresses start with '3'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
-        // Energi private keys start with e'
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,92);
-        // Energi BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        // Energi BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
+        // Energi script addresses start with 'N'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,53);
+        // Energi private keys start with 'G'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,106);
+        // Energi BIP32 pubkeys start with 'npub'
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x03)(0xB8)(0xC8)(0x56).convert_to_container<std::vector<unsigned char> >();
+        // Energi BIP32 prvkeys start with 'nprv'
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0xD7)(0xDC)(0x6E)(0x9F).convert_to_container<std::vector<unsigned char> >();
 
         // Energi BIP44 coin type is '5'
         nExtCoinType = 5;
@@ -371,7 +371,7 @@ public:
         strNetworkID = "test";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
@@ -439,7 +439,6 @@ public:
 
         genesis = CreateGenesisBlock(1521239519UL, 12501313, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         uint256 expectedGenesisHash = uint256S("0x404555947d9a66370f6842c632662b9fae6dd90ef2bf03871af4c4b780ac93f6");
@@ -453,6 +452,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -509,7 +509,7 @@ public:
         strNetworkID = "test60";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
         // miners get 20% of all coins or 2.4M / 526,000 ~ 4.57
@@ -573,7 +573,6 @@ public:
 
         genesis = CreateGenesisBlock(1521240281UL, 39305453, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
         uint256 expectedGenesisHash = uint256S("0x5c5a96d7284da7a7c250b6ad2f301893e0f0a61bea4d4a5e009c758e4ea7c39a");
         uint256 expectedGenesisMerkleRoot = uint256S("0x0bb0036bbae578cff5e636a197895f25b7242eeebc0272e91db3ebfb9a73843c");
@@ -586,6 +585,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
@@ -641,7 +641,7 @@ public:
         strNetworkID = "regtest";
 
         // Energi distribution parameters
-        consensus.energiBackboneAddress = "tA61JveN6y2kej9kYNK9tKvVuUgAvgaC6X";
+        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b27ae40d9e9917130210894e50e99f26968faaa4") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 30% of all coins or 3.6M / 526,000 ~ 6.85
@@ -712,7 +712,6 @@ public:
 
         genesis = CreateGenesisBlock(1521320241UL, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
-        assert(valid_genesis_pow);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         uint256 expectedGenesisHash = uint256S("0x1fa5bf921cdb7d6daa35ceb88da3cbe9b2ae0dbc0c906b6aa8001879ecbe3ea1");
@@ -725,6 +724,7 @@ public:
         }
         #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
 
+        assert(valid_genesis_pow);
         assert(consensus.hashGenesisBlock == expectedGenesisHash);
         assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.

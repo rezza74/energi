@@ -45,18 +45,10 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
     // verify the Energi Backbone address payment
-    // TODO: is there a better way to search tx outputs?
     bool isBackboneRewardValueMet = false;
-    CBitcoinAddress backboneAddress(consensusParams.energiBackboneAddress);
-    CKeyID backboneKeyID;
-    if (!backboneAddress.GetKeyID(backboneKeyID))
-    {
-        error("Unable to get key ID for Energi Backbone address");
-    }
-    CScript backbonePubKey = GetScriptForDestination(backboneKeyID);
     for (auto const & i : block.vtx[0].vout)
     {
-        if ((i.scriptPubKey == backbonePubKey) && (i.nValue >= consensusParams.nBlockSubsidyBackbone))
+        if ((i.scriptPubKey == consensusParams.energiBackboneScript) && (i.nValue >= consensusParams.nBlockSubsidyBackbone))
         {
             isBackboneRewardValueMet = true;
             break;
@@ -244,26 +236,23 @@ void CMasternodePayments::FillBlockBackbonePayment(CMutableTransaction& txNew, C
     // make sure it's not filled yet
     txoutBackboneRet = CTxOut();
 
-    CBitcoinAddress backboneAddress(consensus.energiBackboneAddress);
-    CKeyID backboneKeyID;
-    if (!backboneAddress.GetKeyID(backboneKeyID))
-    {
-        error("Unable to get key ID for Energi Backbone address");
-    }
-    CScript payee = GetScriptForDestination(backboneKeyID);
-
     CAmount backbonePayment = consensus.nBlockSubsidyBackbone;
 
     // split reward between Energi Backbone, masternodes & miners
     txNew.vout[0].nValue -= backbonePayment;
-    txoutBackboneRet = CTxOut(backbonePayment, payee);
+    txoutBackboneRet = CTxOut(backbonePayment, consensus.energiBackboneScript);
     txNew.vout.push_back(txoutBackboneRet);
 
-    CTxDestination address1;
-    ExtractDestination(payee, address1);
-    CBitcoinAddress address2(address1);
-
-    LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, address2.ToString());
+    CTxDestination txdestBackbone;
+    if (ExtractDestination(consensus.energiBackboneScript, txdestBackbone))
+    {
+        CBitcoinAddress backboneAddress(txdestBackbone);
+        LogPrintf("CMasternodePayments::FillBlockBackbonePayment -- Backbone payment %lld to %s\n", backbonePayment, backboneAddress.ToString());
+    }
+    else
+    {
+        error("CMasternodePayments::FillBlockBackbonePayment -- Energi Backbone script is not valid.");
+    }
 }
 
 /**

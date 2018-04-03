@@ -670,7 +670,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             // Start client minimized
             QString strArgs = "-min";
             // Set -testnet /-testnet60x/-regtest options
-            strArgs += QString::fromStdString(strprintf(" -testnet=%d -testnet60x -regtest=%d", GetBoolArg("-testnet", false), GetBoolArg("-testnet60x", false), GetBoolArg("-regtest", false)));
+            strArgs += QString::fromStdString(strprintf(" -testnet=%d -testnet60x=%d -regtest=%d", GetBoolArg("-testnet", false), GetBoolArg("-testnet60x", false), GetBoolArg("-regtest", false)));
 
 #ifdef UNICODE
             boost::scoped_array<TCHAR> args(new TCHAR[strArgs.length() + 1]);

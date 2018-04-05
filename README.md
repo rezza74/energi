@@ -1,8 +1,12 @@
+# Energi Core v0.1.0
+
+#### https://www.energi.world/
+
+
 What is Energi?
 ----------------
-
-See https://www.energi.world
-
+For more information, as well as an immediately useable, binary version of
+the Energi Core software, see https://www.energi.world/downloads/.
 
 License
 -------
@@ -14,7 +18,7 @@ Development Process
 -------------------
 
 The `master` branch is meant to be stable. Development is normally done in separate branches.
-[Tags](https://github.com/dashpay/dash/tags) are created to indicate new official,
+[Tags](https://github.com/energicryptocurrency/energi/tags) are created to indicate new official,
 stable release versions of Energi Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).

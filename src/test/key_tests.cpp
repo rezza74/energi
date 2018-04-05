@@ -9,7 +9,7 @@
 #include "uint256.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "test/test_dash.h"
+#include "test/test_energi.h"
 
 #include <string>
 #include <vector>
@@ -18,42 +18,38 @@
 
 using namespace std;
 
-static const string strSecret1     ("7qh6LYnLN2w2ntz2wwUhRUEgkQ2j8XB16FGw77ZRDZmC29bn7cD");
-static const string strSecret2     ("7rve4MxeWFQHGbSYH6J2yaaZd3MBUqoDEwN6ZAZ6ZHmhTT4r3hW");
-static const string strSecret1C    ("XBuxZHH6TqXUuaSjbVTFR1DQSYecxCB9QA1Koyx5tTc3ddhqEnhm");
-static const string strSecret2C    ("XHMkZqWcY6Zkoq1j42NBijD8z5N5FtNy2Wx7WyAfXX2HZgxry8cr");
-static const CBitcoinAddress addr1 ("Xywgfc872nn5CKtpATCoAjZCc4v96pJczy");
-static const CBitcoinAddress addr2 ("XpmouUj9KKJ99ZuU331ZS1KqsboeFnLGgK");
-static const CBitcoinAddress addr1C("XxV9h4Xmv6Pup8tVAQmH97K6grzvDwMG9F");
-static const CBitcoinAddress addr2C("Xn7ZrYdExuk79Dm7CJCw7sfUWi2qWJSbRy");
+static const string strSecret1     ("4ZZcwP6utR94jqhqXNKeYX19VU5rokGJqNFhaScKNpTRCs5kF6L");
+static const string strSecret2     ("4ZXhhzWHZ4XyYFtbJr4SKVayaRv7994s9uQQ9YHQDGkL46UBYdy");
+static const string strSecret1C    ("Giiyd2Z6RwYbW5yFB37Ji7ReUeYSqKxZiUot6c2t7JTbq8Uo5GqR");
+static const string strSecret2C    ("GiaWfvpG4WbiYxiiRmYAkdAxiYyQ6vc4NJJHAh5PTAWF6Xm9tNmh");
+static const CBitcoinAddress addr1 ("EVpKt56m8W3f4tc3rSSgqVhVqQk817LoeD");
+static const CBitcoinAddress addr2 ("EMptRM8cEE1bLyeHmRBssKybEGrsKEkWiX");
+static const CBitcoinAddress addr1C("EK2PbgCrLPXW76HB84tM7ynZqtVhm8YJtJ");
+static const CBitcoinAddress addr2C("EResuxKDsSzZK2SNvfcn6fTXFnBygDRRb2");
 
 
-static const string strAddressBad("Xta1praZQjyELweyMByXyiREw1ZRsjXzVP");
-
+static const string strAddressBad("Eta1praZQjyELweyMByXyiREw1ZRsjXzVP");
 
 #ifdef KEY_TESTS_DUMPINFO
 void dumpKeyInfo(uint256 privkey)
 {
-    CKey key;
-    key.resize(32);
-    memcpy(&secret[0], &privkey, 32);
-    vector<unsigned char> sec;
-    sec.resize(32);
-    memcpy(&sec[0], &secret[0], 32);
-    printf("  * secret (hex): %s\n", HexStr(sec).c_str());
-
     for (int nCompressed=0; nCompressed<2; nCompressed++)
     {
         bool fCompressed = nCompressed == 1;
+
+        CKey key;
+        key.Set(privkey.begin(), privkey.end(), fCompressed);
+
         printf("  * %s:\n", fCompressed ? "compressed" : "uncompressed");
         CBitcoinSecret bsecret;
-        bsecret.SetSecret(secret, fCompressed);
+        bsecret.SetKey(key);
         printf("    * secret (base58): %s\n", bsecret.ToString().c_str());
-        CKey key;
-        key.SetSecret(secret, fCompressed);
-        vector<unsigned char> vchPubKey = key.GetPubKey();
+
+        CPubKey vchPubKey = key.GetPubKey();
+        CKeyID keyID = vchPubKey.GetID();
+        CBitcoinAddress keyAddress(keyID);
         printf("    * pubkey (hex): %s\n", HexStr(vchPubKey).c_str());
-        printf("    * address (base58): %s\n", CBitcoinAddress(vchPubKey).ToString().c_str());
+        printf("    * address (base58): %s\n", CBitcoinAddress(keyAddress).ToString().c_str());
     }
 }
 #endif
@@ -109,6 +105,7 @@ BOOST_AUTO_TEST_CASE(key_test1)
     BOOST_CHECK(addr1C.Get() == CTxDestination(pubkey1C.GetID()));
     BOOST_CHECK(addr2C.Get() == CTxDestination(pubkey2C.GetID()));
 
+#ifdef ENERGI_TEST_REQUIRES_MAIN_NET
     for (int n=0; n<16; n++)
     {
         string strMsg = strprintf("Very secret message %i: 11", n);
@@ -186,6 +183,7 @@ BOOST_AUTO_TEST_CASE(key_test1)
     BOOST_CHECK(key2C.SignCompact(hashMsg, detsigc));
     BOOST_CHECK(detsig == ParseHex("1c52d8a32079c11e79db95af63bb9600c5b04f21a9ca33dc129c2bfa8ac9dc1cd561d8ae5e0f6c1a16bde3719c64c2fd70e404b6428ab9a69566962e8771b5944d"));
     BOOST_CHECK(detsigc == ParseHex("2052d8a32079c11e79db95af63bb9600c5b04f21a9ca33dc129c2bfa8ac9dc1cd561d8ae5e0f6c1a16bde3719c64c2fd70e404b6428ab9a69566962e8771b5944d"));
+#endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -14,7 +14,7 @@
 #include "uint256.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "test/test_dash.h"
+#include "test/test_energi.h"
 
 #include <vector>
 
@@ -86,7 +86,8 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
 
 BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
 {
-    string strSecret = string("7sQb6QHALg4XyHsJHsSNXnEHGhZfzTTUPJXJqaqK7CavQkiL9Ms");
+
+    string strSecret = string("Gh3RtaeBBCKAkBrE6apZy9mi7FgwfGba6V5cdk8dvegzfhe18Y4v");
     CBitcoinSecret vchSecret;
     BOOST_CHECK(vchSecret.SetString(strSecret));
 
@@ -102,15 +103,17 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     filter.Serialize(stream, SER_NETWORK, PROTOCOL_VERSION);
 
-    vector<unsigned char> vch = ParseHex("038fc16b080000000000000001");
+    vector<unsigned char> vch = ParseHex("03c67291080000000000000001");
     vector<char> expected(vch.size());
 
-    for (unsigned int i = 0; i < vch.size(); i++)
+    for (unsigned int i = 0; i < vch.size(); ++i) {
         expected[i] = (char)vch[i];
+    }
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
 
+#ifdef ENERGI_TEST_REQUIRES_MAIN_NET
 BOOST_AUTO_TEST_CASE(bloom_match)
 {
     // Random real transaction (b4749f017444b051c44dfd2720e88f314ff94f3dd6d56d40ef65854fcd7fff6b)
@@ -492,7 +495,7 @@ BOOST_AUTO_TEST_CASE(rolling_bloom)
         if (rb1.contains(RandomData()))
             ++nHits;
     }
-    // Run test_dash with --log_level=message to see BOOST_TEST_MESSAGEs:
+    // Run test_energi with --log_level=message to see BOOST_TEST_MESSAGEs:
     BOOST_TEST_MESSAGE("RollingBloomFilter got " << nHits << " false positives (~100 expected)");
 
     // Insanely unlikely to get a fp count outside this range:
@@ -536,5 +539,6 @@ BOOST_AUTO_TEST_CASE(rolling_bloom)
         BOOST_CHECK(rb2.contains(data[i]));
     }
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()

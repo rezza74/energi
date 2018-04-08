@@ -224,7 +224,7 @@ public:
         consensus.nSuperblockCycle = 20160; // (60*24*14) Super block cycle for every 14 days (2 weeks)
         consensus.nRegularTreasuryBudget = 18400000000000;
         consensus.nSpecialTreasuryBudget = 400000000000000; // 4M special initial treasury budget
-        consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 4;
+        consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 2;
 
         consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
         consensus.nInstantSendKeepLock = 24;

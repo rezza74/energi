@@ -231,7 +231,7 @@ public:
 
         consensus.nBudgetProposalEstablishingTime = 60*60*24; // 1 day
 
-        consensus.nGovernanceMinQuorum = 10;
+        consensus.nGovernanceMinQuorum = 7;
         consensus.nGovernanceFilterElements = 20000;
 
         consensus.nMasternodeMinimumConfirmations = 15;

@@ -288,19 +288,19 @@ public:
         consensus.hashGenesisBlock = genesis.GetHash();
 
         // TODO: mine genesis block for main net
-        //uint256 expectedGenesisHash = uint256S("0x440cbbe939adba25e9e41b976d3daf8fb46b5f6ac0967b0a9ed06a749e7cf1e2");
-        //uint256 expectedGenesisMerkleRoot = uint256S("0x6a4855e61ae0da5001564cee6ba8dcd7bc361e9bb12e76b62993390d6db25bca");
+        uint256 expectedGenesisHash = uint256S("0x440cbbe939adba25e9e41b976d3daf8fb46b5f6ac0967b0a9ed06a749e7cf1e2");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x6a4855e61ae0da5001564cee6ba8dcd7bc361e9bb12e76b62993390d6db25bca");
 
-        //#ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
-        //if (consensus.hashGenesisBlock != expectedGenesisHash)
-        //{
-        //    GenesisMiner mine(genesis, strNetworkID);
-        //}
-        //#endif // ENERGI_MINE_NEW_GENESIS_BLOCK
-//
-        //assert(valid_genesis_pow);
-        //assert(consensus.hashGenesisBlock == expectedGenesisHash);
-        //assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
+        #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
+        if (consensus.hashGenesisBlock != expectedGenesisHash)
+        {
+            GenesisMiner mine(genesis, strNetworkID);
+        }
+        #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
+
+        assert(valid_genesis_pow);
+        assert(consensus.hashGenesisBlock == expectedGenesisHash);
+        assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
         vSeeds.push_back(CDNSSeedData("energi.network", "dnsseed.energi.network"));
 

@@ -542,13 +542,29 @@ boost::filesystem::path GetDefaultDataDir()
 #endif
 }
 
-static boost::filesystem::path pathCached;
-static boost::filesystem::path pathCachedNetSpecific;
-static CCriticalSection csPathCached;
+// these are construct on first use in order that GetDataDir() may be called from a static context safely
+namespace
+{
+    boost::filesystem::path & getPathCached()
+    {
+        static boost::filesystem::path pathCached;
+        return pathCached;
+    }
+
+    boost::filesystem::path & getPathCachedNetSpecific()
+    {
+        static boost::filesystem::path pathCachedNetSpecific;
+        return pathCachedNetSpecific;
+    }
+}
 
 const boost::filesystem::path &GetDataDir(bool fNetSpecific)
 {
     namespace fs = boost::filesystem;
+
+    static boost::filesystem::path & pathCached = getPathCached();
+    static boost::filesystem::path & pathCachedNetSpecific = getPathCachedNetSpecific();
+    static CCriticalSection csPathCached;
 
     LOCK(csPathCached);
 
@@ -576,12 +592,12 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
     return path;
 }
 
-static boost::filesystem::path backupsDirCached;
-static CCriticalSection csBackupsDirCached;
-
 const boost::filesystem::path &GetBackupsDir()
 {
     namespace fs = boost::filesystem;
+
+    static boost::filesystem::path backupsDirCached;
+    static CCriticalSection csBackupsDirCached;
 
     LOCK(csBackupsDirCached);
 
@@ -606,6 +622,9 @@ const boost::filesystem::path &GetBackupsDir()
 
 void ClearDatadirCache()
 {
+    static boost::filesystem::path & pathCached = getPathCached();
+    static boost::filesystem::path & pathCachedNetSpecific = getPathCachedNetSpecific();
+
     pathCached = boost::filesystem::path();
     pathCachedNetSpecific = boost::filesystem::path();
 }

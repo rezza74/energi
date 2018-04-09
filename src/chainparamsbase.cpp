@@ -125,7 +125,7 @@ std::string ChainNameFromCommandLine()
         return CBaseChainParams::TESTNET;
     if (fTestNet60x)
         return CBaseChainParams::TESTNET60X;
-    return CBaseChainParams::TESTNET60X;
+    return CBaseChainParams::MAIN;
 }
 
 bool AreBaseParamsConfigured()

@@ -55,7 +55,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     const char* pszTimestamp = "World Power";
-    const CScript genesisOutputScript = CScript() << ParseHex("04494295bcacec9dad5aa01f28183f1f27e088cf7e950e21160d2f5eaad024a34eff1112f5cf3bd0fc80754e5cd4a26fde9c6866959e449a5990782c8b60d5f4f5") << OP_CHECKSIG;
+    const CScript genesisOutputScript = CScript() << ParseHex("0479619b3615fc9f03aace413b9064dc97d4b6f892ad541e5a2d8a3181517443840a79517fb1a308e834ac3c53da86de69a9bcce27ae01cf77d9b2b9d7588d122a") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -224,14 +224,14 @@ public:
         consensus.nSuperblockCycle = 20160; // (60*24*14) Super block cycle for every 14 days (2 weeks)
         consensus.nRegularTreasuryBudget = 18400000000000;
         consensus.nSpecialTreasuryBudget = 400000000000000; // 4M special initial treasury budget
-        consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 4;
+        consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 2;
 
-        consensus.nMasternodePaymentsStartBlock = 172800; // should be about 120 days after genesis
+        consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
         consensus.nInstantSendKeepLock = 24;
 
         consensus.nBudgetProposalEstablishingTime = 60*60*24; // 1 day
 
-        consensus.nGovernanceMinQuorum = 10;
+        consensus.nGovernanceMinQuorum = 7;
         consensus.nGovernanceFilterElements = 20000;
 
         consensus.nMasternodeMinimumConfirmations = 15;
@@ -263,10 +263,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 3226; // 80% of 4032
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000172210fe351643b3f1"); // 750000
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000000000000b4181bbbdddbae464ce11fede5d0292fb63fdede1e7c8ab21c"); //750000
+        consensus.defaultAssumeValid = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -277,30 +277,30 @@ public:
         pchMessageStart[1] = 0x2d;
         pchMessageStart[2] = 0x9a;
         pchMessageStart[3] = 0xaf;
-        vAlertPubKey = ParseHex("04da7109a0215bf7bb19ecaf9e4295104142b4e03579473c1083ad44e8195a13394a8a7e51ca223fdbc5439420fd08963e491007beab68ac65c5b1c842c8635b37");
+        vAlertPubKey = ParseHex("048cd9adbefe1ca8435de5372e2725027e56f959fb979f5252c7d2a51de2f5251c10d55ad632e8c217d086b7b517ccfa934d5af693f354a0ab58bce23c963df5fc");
         nDefaultPort = 9797;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1390095618, 28917698, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1523243955, 29230861, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         // TODO: mine genesis block for main net
-        //uint256 expectedGenesisHash = uint256S("0x440cbbe939adba25e9e41b976d3daf8fb46b5f6ac0967b0a9ed06a749e7cf1e2");
-        //uint256 expectedGenesisMerkleRoot = uint256S("0x6a4855e61ae0da5001564cee6ba8dcd7bc361e9bb12e76b62993390d6db25bca");
+        uint256 expectedGenesisHash = uint256S("0x7a5768a81b44d316d239fe86161259001b8070b54df4115b55fa6b4ca3eda9bd");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x28762d5b5c8db3ed2c7c24807b7878d9598b04552555d3eaf3f0be5bafe59d2a");
 
-        //#ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
-        //if (consensus.hashGenesisBlock != expectedGenesisHash)
-        //{
-        //    GenesisMiner mine(genesis, strNetworkID);
-        //}
-        //#endif // ENERGI_MINE_NEW_GENESIS_BLOCK
-//
-        //assert(valid_genesis_pow);
-        //assert(consensus.hashGenesisBlock == expectedGenesisHash);
-        //assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
+        #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
+        if (consensus.hashGenesisBlock != expectedGenesisHash)
+        {
+            GenesisMiner mine(genesis, strNetworkID);
+        }
+        #endif // ENERGI_MINE_NEW_GENESIS_BLOCK
+
+        assert(valid_genesis_pow);
+        assert(consensus.hashGenesisBlock == expectedGenesisHash);
+        assert(genesis.hashMerkleRoot == expectedGenesisMerkleRoot);
 
         vSeeds.push_back(CDNSSeedData("energi.network", "dnsseed.energi.network"));
 
@@ -328,10 +328,15 @@ public:
 
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
-        strSporkPubKey = "044221353eb05b321b55f9b47dc90462066d6e09019e95b05d6603a117877fd34b13b34e8ed005379a9553ce7e719c44c658fd9c9acaae58a04c63cb8f7b5716db";
+        strSporkPubKey = "0440122819daf62ad5de1467013d72c9b909124346c317e2411f16e5a7675ecbd543fe0a3344d940d789b9b6f3440002a5b29e694827820fd14630bb454076ef96";
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
+            ( 0, uint256S("0x0")),
+            0,
+            0,
+            0
+            /*
             (  1500, uint256S("0x000000aaf0300f59f49bc3e970bad15c11f961fe2347accffff19d96ec9778e3"))
             (  4991, uint256S("0x000000003b01809551952460744d5dbb8fcbd6cbae3c220267bf7fa43f837367"))
             (  9918, uint256S("0x00000000213e229f332c0ffbe34defdaa9e74de87f2d8d1f01af8d121c3c170b"))
@@ -357,6 +362,7 @@ public:
             3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             5000        // * estimated number of transactions per day after checkpoint
+            */
         };
     }
 };
@@ -401,7 +407,7 @@ public:
         consensus.nSpecialTreasuryBudget = 400000000000000; // 4M special initial treasury budget
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
-        consensus.nMasternodePaymentsStartBlock = 172800; // should be about 120 days after genesis
+        consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
         consensus.nInstantSendKeepLock = 6;
         consensus.nBudgetProposalEstablishingTime = 60*60;
         consensus.nGovernanceMinQuorum = 1;
@@ -436,13 +442,12 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-
-        genesis = CreateGenesisBlock(1521239519UL, 12501313, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1523244182, 12524756, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x404555947d9a66370f6842c632662b9fae6dd90ef2bf03871af4c4b780ac93f6");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x0340ab5702d1b048c256c496df8b4685d3e1b5fbd56c99077de7b91e6220c79a");
+        uint256 expectedGenesisHash = uint256S("0x6d89b18291d64260659abdc1dd6bc49d09f9f4ab130a45079b322e4250fe1216");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x28762d5b5c8db3ed2c7c24807b7878d9598b04552555d3eaf3f0be5bafe59d2a");
 
         // TODO: mine genesis block for testnet
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -536,7 +541,7 @@ public:
         consensus.nSpecialTreasuryBudget = 400000000000000; // 4M special initial treasury budget
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 36;
 
-        consensus.nMasternodePaymentsStartBlock = 172800 / 60;
+        consensus.nMasternodePaymentsStartBlock = 216000 / 60;
         consensus.nInstantSendKeepLock = 6;
         consensus.nBudgetProposalEstablishingTime = 60*20;
         consensus.nGovernanceMinQuorum = 1;
@@ -571,11 +576,11 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1521240281UL, 39305453, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1523244282, 40138226, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
-        uint256 expectedGenesisHash = uint256S("0x5c5a96d7284da7a7c250b6ad2f301893e0f0a61bea4d4a5e009c758e4ea7c39a");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x0bb0036bbae578cff5e636a197895f25b7242eeebc0272e91db3ebfb9a73843c");
+        uint256 expectedGenesisHash = uint256S("0xef103b107a6ab241918171ed8a3b9b51f14a3be1d433ba8679e123ad651c07a8");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x17f8d8e8ed263760396dd008d60971201e807ee601fde9e4b87a2ae792021d6e");
 
         // TODO: mine genesis block for testnet60x
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -710,12 +715,12 @@ public:
         nDefaultPort = 39797;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1521320241UL, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1523244389, 5, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x1fa5bf921cdb7d6daa35ceb88da3cbe9b2ae0dbc0c906b6aa8001879ecbe3ea1");
-        uint256 expectedGenesisMerkleRoot = uint256S("0x8afc881131014f95d541ac0f2965eb0397f8d0990ef563e67c540ff767461d15");
+        uint256 expectedGenesisHash = uint256S("0xe5ff58561e8e50ccfa1f052bc39fc4b2a2cb8cd9479de52b64f54818c319a9ce");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x2a07a5d82ed817a33917172fdc34b875ff2aeaf13a73599b552b5e341ebcef60");
 
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
         if (consensus.hashGenesisBlock != expectedGenesisHash)

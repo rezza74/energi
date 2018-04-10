@@ -1239,9 +1239,7 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockReward)
     CAmount ret = 0;
     const Consensus::Params& consensusParams = Params().GetConsensus();
     if (nHeight >= consensusParams.nMasternodePaymentsStartBlock) {
-        //Masternodes get their assigned block subsidy plus 50% of the tx fees
-        CAmount txFees = blockReward - GetBlockSubsidy(nHeight, consensusParams);
-        ret = consensusParams.nBlockSubsidyMasternodes + (0.5 * txFees);
+        ret = consensusParams.nBlockSubsidyMasternodes;
     }
     return ret;
 }

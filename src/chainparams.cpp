@@ -223,7 +223,7 @@ public:
         // number of super blocks per year according to the 20160 block cycle
         consensus.nSuperblockCycle = 20160; // (60*24*14) Super block cycle for every 14 days (2 weeks)
         consensus.nRegularTreasuryBudget = 18400000000000ULL;
-        consensus.nSpecialTreasuryBudget = 418400000000000ULL; // 4M special treasury budget boost
+        consensus.nSpecialTreasuryBudget = 400000000000000ULL + consensus.nRegularTreasuryBudget; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 2;
 
         consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
@@ -402,7 +402,7 @@ public:
         // number of super blocks per year according to the 180 block cycle
         consensus.nSuperblockCycle = 180;
         consensus.nRegularTreasuryBudget = 18400000000000ULL;
-        consensus.nSpecialTreasuryBudget = 418400000000000ULL; // 4M special treasury budget boost
+        consensus.nSpecialTreasuryBudget = 400000000000000ULL + consensus.nRegularTreasuryBudget; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
         consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
@@ -537,7 +537,7 @@ public:
         // number of super blocks per year according to the 20160 block cycle
         consensus.nSuperblockCycle = 60;
         consensus.nRegularTreasuryBudget = 18400000000000ULL * 60ULL;
-        consensus.nSpecialTreasuryBudget = 418400000000000ULL * 60ULL; // 4M special treasury budget boost
+        consensus.nSpecialTreasuryBudget = (400000000000000ULL + consensus.nRegularTreasuryBudget) * 60ULL; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
         consensus.nMasternodePaymentsStartBlock = 216000 / 60;
@@ -670,7 +670,7 @@ public:
         // number of super blocks per year according to the 20160 block cycle
         consensus.nSuperblockCycle = 60;
         consensus.nRegularTreasuryBudget = 18400000000000ULL;
-        consensus.nSpecialTreasuryBudget = 418400000000000ULL; // 4M special treasury budget boost
+        consensus.nSpecialTreasuryBudget = 400000000000000ULL + consensus.nRegularTreasuryBudget; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
         consensus.nMasternodePaymentsStartBlock = 240;

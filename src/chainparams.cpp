@@ -201,8 +201,8 @@ public:
         consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b051bdceb44b28bb36ef2add5ec07ccbc64708c2") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
-        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 6.85
-        // miners get 10% of all coins or 1.2M / 526,000 ~ 4.57
+        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
+        // miners get 10% of all coins or 1.2M / 526,000 ~ 2.28
         // backbone gets 10% of all coins or 1.2M / 526,000 ~ 2.28
         // which adds up to 13.7 as block subsidy
         consensus.nBlockSubsidy = 1370000000ULL;
@@ -380,8 +380,8 @@ public:
         consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
-        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 6.85
-        // miners get 10% of all coins or 1.2M / 526,000 ~ 4.57
+        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
+        // miners get 10% of all coins or 1.2M / 526,000 ~ 2.28
         // backbone gets 10% of all coins or 1.2M / 526,000 ~ 2.28
         // which adds up to 13.7 as block subsidy
         consensus.nBlockSubsidy = 1370000000ULL;
@@ -515,8 +515,8 @@ public:
         consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
-        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 6.85
-        // miners get 10% of all coins or 1.2M / 526,000 ~ 4.57
+        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
+        // miners get 10% of all coins or 1.2M / 526,000 ~ 2.28
         // backbone gets 10% of all coins or 1.2M / 526,000 ~ 2.28
         // which adds up to 13.7 as block subsidy
         consensus.nBlockSubsidy = 1370000000ULL * 60ULL;
@@ -648,8 +648,8 @@ public:
         consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b27ae40d9e9917130210894e50e99f26968faaa4") << OP_EQUAL;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
-        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 6.85
-        // miners get 10% of all coins or 1.2M / 526,000 ~ 4.57
+        // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
+        // miners get 10% of all coins or 1.2M / 526,000 ~ 2.28
         // backbone gets 10% of all coins or 1.2M / 526,000 ~ 2.28
         // which adds up to 13.7 as block subsidy
         consensus.nBlockSubsidy = 1370000000ULL;

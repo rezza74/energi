@@ -142,7 +142,7 @@ public:
     unsigned int nTime;
     unsigned int nBits;
     uint256 hashMix;
-    unsigned int nNonce;
+    uint64_t nNonce;
 
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     uint32_t nSequenceId;

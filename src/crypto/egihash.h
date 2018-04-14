@@ -23,7 +23,7 @@ namespace egihash
 	{
 		/** \brief DAG_MAGIC_BYTES is the starting sequence of a DAG file, used for identification.
 		*/
-		static constexpr char DAG_MAGIC_BYTES[] = "EGIHASH_DAG";
+		static constexpr char DAG_MAGIC_BYTES[] = "NRGHASH_DAG";
 
 		/** \brief DAG_FILE_HEADER_SIZE is the expected size of a DAG file header.
 		*/
@@ -55,21 +55,21 @@ namespace egihash
 		*/
 		static constexpr uint32_t WORD_BYTES = 4u;
 
-		/** \brief The number of bytes in the dataset at genesis.
-		*/
-		static constexpr uint32_t DATASET_BYTES_INIT = 1u << 30u;
-
 		/** \brief The growth of the dataset in bytes per epoch.
 		*/
 		static constexpr uint32_t DATASET_BYTES_GROWTH = 1u << 23u;
 
-		/** \brief The number of bytes in the cache at genesis.
+		/** \brief The number of bytes in the dataset at genesis.
 		*/
-		static constexpr uint32_t CACHE_BYTES_INIT = 1u << 24u;
+		static constexpr uint32_t DATASET_BYTES_INIT = (1u << 30u) + (DATASET_BYTES_GROWTH * 182);
 
 		/** \brief The growth of the cache in bytes per epoch.
 		*/
 		static constexpr uint32_t CACHE_BYTES_GROWTH = 1u << 17u;
+
+		/** \brief The number of bytes in the cache at genesis.
+		*/
+		static constexpr uint32_t CACHE_BYTES_INIT = (1u << 24u) + (CACHE_BYTES_GROWTH * 182);
 
 		/** \brief Ratio of the size of the DAG in bytes relative to the size of the cache in bytes..
 		*/
@@ -77,9 +77,9 @@ namespace egihash
 
 		/** \brief The number of blocks which constitute one epoch.
 		*
-		*	The DAG and cache must be regenerated once per epoch.
+		*	The DAG and cache must be regenerated once per epoch. (approximately 120 hours)
 		*/
-		static constexpr uint32_t EPOCH_LENGTH = 30000u;
+		static constexpr uint32_t EPOCH_LENGTH = 7200u;
 
 		/** \brief The width of the mix hash for egihash.
 		*/
@@ -155,7 +155,7 @@ namespace egihash
 	*
 	*	This represents a keccak-256 hash that will be used as input for building the DAG/cache.
 	*/
-	static constexpr char epoch0_seedhash[] = "\xa8\x49\x4b\xb2\x89\x5b\xd7\xed\x18\xbb\x39\xb7\xb2\x8a\xf5\x1d\xec\x51\xf7\xca\xd3\x30\xc1\x68\xf1\xbd\x1c\x90\xe7\x61\x4c\x32";
+	static constexpr char epoch0_seedhash[] = "\xee\x49\x4b\xb2\x89\x5b\xd7\xed\x18\xbb\x39\xb7\xb2\x8a\xf5\x1d\xec\x51\xf7\xca\xd3\x30\xc1\x68\xf1\xbd\x1c\x90\xe7\x61\x4c\x32";
 	static constexpr uint8_t size_epoch0_seedhash = sizeof(epoch0_seedhash) - 1;
 	static_assert(size_epoch0_seedhash == 32, "Invalid seedhash");
 

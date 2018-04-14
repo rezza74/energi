@@ -151,11 +151,13 @@ namespace egihash
 	};
 
 	/** \brief epoch0_seedhash is is the seed hash for the genesis block and first epoch of the DAG.
-	*			All seed hashes for subsequent epochs will be generated from this seedhash.
+	*		All seed hashes for subsequent epochs will be generated from this seedhash.
+	*		This hash was chosen as: seed = SHA256(SHA256(Concatenate(EthereumBlock5439314Hash, DashBlock853406Hash)))
+	* 		Using two block hashes from other blockchains serves as a proof of the timestamp in the genesis block.
 	*
 	*	This represents a keccak-256 hash that will be used as input for building the DAG/cache.
 	*/
-	static constexpr char epoch0_seedhash[] = "\xee\x49\x4b\xb2\x89\x5b\xd7\xed\x18\xbb\x39\xb7\xb2\x8a\xf5\x1d\xec\x51\xf7\xca\xd3\x30\xc1\x68\xf1\xbd\x1c\x90\xe7\x61\x4c\x32";
+	static constexpr char epoch0_seedhash[] = "\xe8\xbc\xb1\xcf\x8a\x60\x16\x25\x11\x7e\x59\xb5\xf2\xdc\x8c\x36\x6e\x14\x04\x83\x0a\xe9\xd2\x5f\x65\x2b\xe6\x7a\xc9\xbb\x81\x5b";
 	static constexpr uint8_t size_epoch0_seedhash = sizeof(epoch0_seedhash) - 1;
 	static_assert(size_epoch0_seedhash == 32, "Invalid seedhash");
 

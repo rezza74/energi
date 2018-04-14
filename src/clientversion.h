@@ -14,8 +14,8 @@
  */
 
 //! These need to be macros, as clientversion.cpp's and energi*-res.rc's voodoo requires it
-#define CLIENT_VERSION_MAJOR 0
-#define CLIENT_VERSION_MINOR 1
+#define CLIENT_VERSION_MAJOR 1
+#define CLIENT_VERSION_MINOR 0
 #define CLIENT_VERSION_REVISION 0
 #define CLIENT_VERSION_BUILD 0
 
@@ -26,7 +26,7 @@
  * Copyright year (2009-this)
  * Todo: update this when changing our copyright comments in the source
  */
-#define COPYRIGHT_YEAR 2017
+#define COPYRIGHT_YEAR 2018
 
 #endif //HAVE_CONFIG_H
 
@@ -40,7 +40,7 @@
 //! Copyright string used in Windows .rc files
 #define COPYRIGHT_STR "2009-" STRINGIZE(COPYRIGHT_YEAR) " The Bitcoin Core Developers, 2014-" \
                               STRINGIZE(COPYRIGHT_YEAR) " The Dash Core Developers 2017-" \
-                              STRINGIZE(COPYRIGHT_YEAR) " The Energi Core Developers"
+                              STRINGIZE(COPYRIGHT_YEAR) " The Energi Core Developers 2017-"
 
 
 /**

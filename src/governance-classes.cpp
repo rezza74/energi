@@ -2,12 +2,12 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-//#define ENABLE_DASH_DEBUG
+//#define ENABLE_ENERGI_DEBUG
 
 #include "core_io.h"
 #include "governance-classes.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "utilstrencodings.h"
 
 #include <boost/algorithm/string.hpp>
@@ -435,7 +435,7 @@ void CSuperblockManager::CreateSuperblock(CMutableTransaction& txNewRet, int nBl
             ExtractDestination(payment.script, address1);
             CBitcoinAddress address2(address1);
 
-            // TODO: PRINT NICE N.N DASH OUTPUT
+            // TODO: PRINT NICE N.N ENERGI OUTPUT
 
             DBG( cout << "CSuperblockManager::CreateSuperblock Before LogPrintf call, nAmount = " << payment.nAmount << endl; );
             LogPrintf("NEW Superblock : output %d (addr %s, amount %d)\n", i, address2.ToString(), payment.nAmount);
@@ -520,7 +520,7 @@ CSuperblock(uint256& nHash)
 bool CSuperblock::IsValidBlockHeight(int nBlockHeight)
 {
     // SUPERBLOCKS CAN HAPPEN ONLY after hardfork and only ONCE PER CYCLE
-    return nBlockHeight >= Params().GetConsensus().nSuperblockStartBlock &&
+    return nBlockHeight >= Params().GetConsensus().nSuperblockCycle &&
             ((nBlockHeight % Params().GetConsensus().nSuperblockCycle) == 0);
 }
 
@@ -532,11 +532,22 @@ CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
         return 0;
     }
 
-    // min subsidy for high diff networks and vice versa
-    int nBits = consensusParams.fPowAllowMinDifficultyBlocks ? UintToArith256(consensusParams.powLimit).GetCompact() : 1;
-    // some part of all blocks issued during the cycle goes to superblock, see GetBlockSubsidy
-    CAmount nSuperblockPartOfSubsidy = GetBlockSubsidy(nBits, nBlockHeight, consensusParams, true);
-    CAmount nPaymentsLimit = nSuperblockPartOfSubsidy * consensusParams.nSuperblockCycle;
+    // default budget limit
+    CAmount nPaymentsLimit = consensusParams.nRegularTreasuryBudget;
+
+    // one budget cycle has a special payment limit to help with early distribution
+    if (consensusParams.nSpecialTreasuryBudgetBlock == static_cast<uint32_t>(nBlockHeight))
+    {
+        nPaymentsLimit = consensusParams.nSpecialTreasuryBudget;
+    }
+
+    // before the masternode payments start at consensus.nMasternodePaymentsStartBlock
+    // coins that would be allocated to masternodes are available to pay treasury proposals
+    if (nBlockHeight < consensusParams.nMasternodePaymentsStartBlock)
+    {
+        nPaymentsLimit += (consensusParams.nSuperblockCycle * consensusParams.nBlockSubsidyMasternodes);
+    }
+
     LogPrint("gobject", "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
 
     return nPaymentsLimit;
@@ -579,7 +590,7 @@ void CSuperblock::ParsePaymentSchedule(std::string& strPaymentAddresses, std::st
         CBitcoinAddress address(vecParsed1[i]);
         if (!address.IsValid()) {
             std::ostringstream ostr;
-            ostr << "CSuperblock::ParsePaymentSchedule -- Invalid Dash Address : " <<  vecParsed1[i];
+            ostr << "CSuperblock::ParsePaymentSchedule -- Invalid Energi Address : " <<  vecParsed1[i];
             LogPrintf("%s\n", ostr.str());
             throw std::runtime_error(ostr.str());
         }

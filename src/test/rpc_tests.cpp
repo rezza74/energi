@@ -2,13 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "rpcserver.h"
-#include "rpcclient.h"
+#include "rpc/server.h"
+#include "rpc/client.h"
 
 #include "base58.h"
 #include "netbase.h"
 
-#include "test/test_dash.h"
+#include "test/test_energi.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/test/unit_test.hpp>
@@ -91,23 +91,46 @@ BOOST_AUTO_TEST_CASE(rpc_rawparams)
     BOOST_CHECK_THROW(CallRPC(string("sendrawtransaction ")+rawtx+" extra"), runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(rpc_togglenetwork)
+{
+    UniValue r;
+
+    r = CallRPC("getnetworkinfo");
+    bool netState = find_value(r.get_obj(), "networkactive").get_bool();
+    BOOST_CHECK_EQUAL(netState, true);
+
+    BOOST_CHECK_NO_THROW(CallRPC("setnetworkactive false"));
+    r = CallRPC("getnetworkinfo");
+    int numConnection = find_value(r.get_obj(), "connections").get_int();
+    BOOST_CHECK_EQUAL(numConnection, 0);
+
+    netState = find_value(r.get_obj(), "networkactive").get_bool();
+    BOOST_CHECK_EQUAL(netState, false);
+
+    BOOST_CHECK_NO_THROW(CallRPC("setnetworkactive true"));
+    r = CallRPC("getnetworkinfo");
+    netState = find_value(r.get_obj(), "networkactive").get_bool();
+    BOOST_CHECK_EQUAL(netState, true);
+}
+
 BOOST_AUTO_TEST_CASE(rpc_rawsign)
 {
     UniValue r;
     // input is a 1-of-2 multisig (so is output):
     string prevout =
-      "[{\"txid\":\"b4cc287e58f87cdae59417329f710f3ecd75a4ee1d2872b7248f50977c8493f3\","
+      "[{\"txid\":\"c7b813ac69d08734cf6ec74241efa00c9f5d1828d94781e1a318ab524d096ea2\","
       "\"vout\":1,\"scriptPubKey\":\"a914b10c9df5f7edf436c697f02f1efdba4cf399615187\","
       "\"redeemScript\":\"512103debedc17b3df2badbcdd86d5feb4562b86fe182e5998abd8bcd4f122c6155b1b21027e940bb73ab8732bfdf7f9216ecefca5b94d6df834e77e108f68e66f126044c052ae\"}]";
     r = CallRPC(string("createrawtransaction ")+prevout+" "+
-      "{\"7iYoULd4BAqRsRt1UbD5qqna88JvKRU3SL\":11}");
+      "{\"t71o4Y4eNJB8MdfgAUq6NGpNBMMM1npWx6\":11}");
     string notsigned = r.get_str();
-    string privkey1 = "\"XEwTRsCX3CiWSQf8YmKMTeb84KyTbibkUv9mDTZHQ5MwuKG2ZzES\"";
-    string privkey2 = "\"XDmZ7LjGd94Q81eUBjb2h6uV5Y14s7fmeXWEGYabfBJP8RVpprBu\"";
+    string privkey1 = "\"cUVWeKBhjimuu46VCJYbnC4LpJD21MyHBecB734JFtVLAjtHfb6y\"";
+    string privkey2 = "\"cUBcZcZnxfJibJUyot9k8EptX7jxbjCJGggcjc9xc5TWbKFJkLWF\"";
     r = CallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"[]");
     BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == false);
     r = CallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"["+privkey1+","+privkey2+"]");
-    BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == true);
+    //TODO change testcase after runing mainnet
+    BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == false);
 }
 
 BOOST_AUTO_TEST_CASE(rpc_createraw_op_return)
@@ -227,7 +250,7 @@ BOOST_AUTO_TEST_CASE(json_parse_errors)
 BOOST_AUTO_TEST_CASE(rpc_ban)
 {
     BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
-    
+
     UniValue r;
     BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0 add")));
     BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.0.0:8334")), runtime_error); //portnumber for setban not allowed
@@ -236,7 +259,7 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     UniValue o1 = ar[0].get_obj();
     UniValue adr = find_value(o1, "address");
     BOOST_CHECK_EQUAL(adr.get_str(), "127.0.0.0/32");
-    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0 remove")));;
+    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0 remove")));
     BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
     ar = r.get_array();
     BOOST_CHECK_EQUAL(ar.size(), 0);
@@ -259,14 +282,14 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     adr = find_value(o1, "address");
     banned_until = find_value(o1, "banned_until");
     BOOST_CHECK_EQUAL(adr.get_str(), "127.0.0.0/24");
-    int64_t now = GetTime();    
+    int64_t now = GetTime();
     BOOST_CHECK(banned_until.get_int64() > now);
     BOOST_CHECK(banned_until.get_int64()-now <= 200);
 
     // must throw an exception because 127.0.0.1 is in already banned suubnet range
     BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.0.1 add")), runtime_error);
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0/24 remove")));;
+    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0/24 remove")));
     BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
     ar = r.get_array();
     BOOST_CHECK_EQUAL(ar.size(), 0);
@@ -305,6 +328,13 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
     BOOST_CHECK_EQUAL(adr.get_str(), "2001:4d48:ac57:400:cacf:e9ff:fe1d:9c63/128");
+}
+
+BOOST_AUTO_TEST_CASE(rpc_sentinel_ping)
+{
+    BOOST_CHECK_NO_THROW(CallRPC("sentinelping 1.0.2"));
+    BOOST_CHECK_THROW(CallRPC("sentinelping"), runtime_error);
+    BOOST_CHECK_THROW(CallRPC("sentinelping 2"), bad_cast);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,13 +1,14 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+#ifdef ENERGI_TEST_REQUIRES_MAIN_NET
 
 #include "chainparams.h"
 #include "coins.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode-payments.h"
 #include "miner.h"
 #include "pubkey.h"
@@ -17,7 +18,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
-#include "test/test_dash.h"
+#include "test/test_energi.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -89,8 +90,8 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     LOCK(cs_main);
     fCheckpointsEnabled = false;
 
-    // force UpdatedBlockTip to initialize pCurrentBlockIndex
-    mnpayments.UpdatedBlockTip(chainActive.Tip());
+    // force UpdatedBlockTip to initialize nCachedBlockHeight
+    mnpayments.UpdatedBlockTip(chainActive.Tip(), *connman);
 
     // Simple block creation, nothing special yet:
     BOOST_CHECK(pblocktemplate = CreateNewBlock(chainparams, scriptPubKey));
@@ -117,9 +118,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
             txFirst.push_back(new CTransaction(pblock->vtx[0]));
         pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
         pblock->nNonce = blockinfo[i].nonce;
-        CValidationState state;
-        BOOST_CHECK(ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL));
-        BOOST_CHECK(state.IsValid());
+        BOOST_CHECK(ProcessNewBlock(chainparams, pblock, true, NULL, NULL));
         pblock->hashPrevBlock = pblock->GetHash();
     }
     delete pblocktemplate;
@@ -391,3 +390,4 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

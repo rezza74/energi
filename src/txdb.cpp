@@ -8,7 +8,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "hash.h"
-#include "main.h"
+#include "validation.h"
 #include "pow.h"
 #include "uint256.h"
 
@@ -33,7 +33,7 @@ static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true)
 {
 }
 
@@ -332,15 +332,16 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 pindexNew->nTime          = diskindex.nTime;
                 pindexNew->nBits          = diskindex.nBits;
                 pindexNew->nNonce         = diskindex.nNonce;
+                pindexNew->hashMix        = diskindex.hashMix;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
 
-                if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
-                    return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
+                if (!CheckProofOfWork(pindexNew->GetBlockHeader().GetPOWHash(), pindexNew->nBits, Params().GetConsensus()))
+                    return error("%s: CheckProofOfWork failed: %s", __func__, pindexNew->ToString());
 
                 pcursor->Next();
             } else {
-                return error("LoadBlockIndex() : failed to read value");
+                return error("%s: failed to read value", __func__);
             }
         } else {
             break;

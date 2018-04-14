@@ -168,13 +168,13 @@ public:
 
     CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
     {
-        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units duffs-per-kilobyte.
+        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units atoms-per-kilobyte.
         // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
         // A typical spendable txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 10000 duffs per kB
-        // and that means that fee per spendable txout is 182 * 10000 / 1000 = 1820 duffs.
-        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in duffs)
-        // i.e. 1820 * 3 = 5460 duffs with default -minrelaytxfee = minRelayTxFee = 10000 duffs per kB.
+        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 10000 atoms per kB
+        // and that means that fee per spendable txout is 182 * 10000 / 1000 = 1820 atoms.
+        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in atoms)
+        // i.e. 1820 * 3 = 5460 atoms with default -minrelaytxfee = minRelayTxFee = 10000 atoms per kB.
         if (scriptPubKey.IsUnspendable())
             return 0;
 
@@ -197,11 +197,6 @@ public:
     friend bool operator!=(const CTxOut& a, const CTxOut& b)
     {
         return !(a == b);
-    }
-
-    friend bool operator<(const CTxOut& a, const CTxOut& b)
-    {
-        return a.nValue < b.nValue || (a.nValue == b.nValue && a.scriptPubKey < b.scriptPubKey);
     }
 
     std::string ToString() const;
@@ -278,6 +273,13 @@ public:
 
     // Compute modified tx size for priority calculation (optionally given tx size)
     unsigned int CalculateModifiedSize(unsigned int nTxSize=0) const;
+    
+    /**
+     * Get the total transaction size in bytes, including witness data.
+     * "Total Size" defined in BIP141 and BIP144.
+     * @return Total transaction size in bytes
+     */
+    unsigned int GetTotalSize() const;
 
     bool IsCoinBase() const
     {
@@ -336,6 +338,34 @@ struct CMutableTransaction
         return !(a == b);
     }
 
+};
+
+/** Implementation of BIP69
+ * https://github.com/bitcoin/bips/blob/master/bip-0069.mediawiki
+ */
+struct CompareInputBIP69
+{
+    inline bool operator()(const CTxIn& a, const CTxIn& b) const
+    {
+        if (a.prevout.hash == b.prevout.hash) return a.prevout.n < b.prevout.n;
+
+        uint256 hasha = a.prevout.hash;
+        uint256 hashb = b.prevout.hash;
+
+        typedef std::reverse_iterator<const unsigned char*> rev_it;
+        rev_it rita = rev_it(hasha.end());
+        rev_it ritb = rev_it(hashb.end());
+
+        return std::lexicographical_compare(rita, rita + hasha.size(), ritb, ritb + hashb.size());
+    }
+};
+
+struct CompareOutputBIP69
+{
+    inline bool operator()(const CTxOut& a, const CTxOut& b) const
+    {
+        return a.nValue < b.nValue || (a.nValue == b.nValue && a.scriptPubKey < b.scriptPubKey);
+    }
 };
 
 #endif // BITCOIN_PRIMITIVES_TRANSACTION_H

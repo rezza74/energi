@@ -501,7 +501,7 @@ public:
 };
 static CTestNetParams testNetParams;
 
-
+#ifdef ENERGI_ENABLE_TESTNET_60X
 /**
  * Testnet (60x)
  */
@@ -634,6 +634,7 @@ public:
     }
 };
 static CTestNet60xParams testNet60xParams;
+#endif
 
 /**
  * Regression test
@@ -779,8 +780,10 @@ CChainParams& Params(const std::string& chain)
             return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
             return testNetParams;
-        else if (chain == CBaseChainParams::TESTNET60X)
+#ifdef ENERGI_ENABLE_TESTNET_60X
+    else if (chain == CBaseChainParams::TESTNET60X)
             return testNet60xParams;
+#endif
     else if (chain == CBaseChainParams::REGTEST)
             return regTestParams;
     else

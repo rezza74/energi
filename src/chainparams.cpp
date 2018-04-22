@@ -376,7 +376,7 @@ public:
         strNetworkID = "test";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -404,7 +404,7 @@ public:
         consensus.nSpecialTreasuryBudget = 400000000000000ULL + consensus.nRegularTreasuryBudget; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
-        consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
+        consensus.nMasternodePaymentsStartBlock = 21600; // should be about 15 days after genesis
         consensus.nInstantSendKeepLock = 6;
         consensus.nBudgetProposalEstablishingTime = 60*60;
         consensus.nGovernanceMinQuorum = 1;
@@ -413,7 +413,7 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
-        consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 24 * 60 * 60; // in seconds -> Energi: 1 day
         consensus.nPowTargetSpacing = 60; // in seconds Energi: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -439,12 +439,12 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1523717022, 15936860, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1524344801, 16880322, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x077543181470a3e54f815d07072387f46236e2e92a2f0e14a3c1e02f25d1ea97");
-        uint256 expectedGenesisMerkleRoot = uint256S("0xce737517317ef573bb17f34c49e10fa30357983f29821f129a99fe3cb90e34c4");
+        uint256 expectedGenesisHash = uint256S("0xee84bfa5f6cafe2ba7f164cee0c33ec63aca76edffa4e8e94656a9be2262cf74");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x34e077f3b96691e4f1aea04061ead361fc4f5b45250513199f46f352b7e4669e");
 
         // TODO: mine genesis block for testnet
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -501,7 +501,7 @@ public:
 };
 static CTestNetParams testNetParams;
 
-
+#ifdef ENERGI_ENABLE_TESTNET_60X
 /**
  * Testnet (60x)
  */
@@ -511,7 +511,7 @@ public:
         strNetworkID = "test60";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -634,6 +634,7 @@ public:
     }
 };
 static CTestNet60xParams testNet60xParams;
+#endif
 
 /**
  * Regression test
@@ -644,7 +645,7 @@ public:
         strNetworkID = "regtest";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b27ae40d9e9917130210894e50e99f26968faaa4") << OP_EQUAL;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -713,11 +714,11 @@ public:
         nDefaultPort = 39797;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1523717273, 11, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1524279488, 12, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x20c0f2eebd83df69a4a508649306089cbd03963d1c6e0664d7593a9dd9f8815d");
+        uint256 expectedGenesisHash = uint256S("0x378abe3d42888769177494063edd42e6c3925e938ff8f73c71a6b6ad5b293ea7");
         uint256 expectedGenesisMerkleRoot = uint256S("0x34e077f3b96691e4f1aea04061ead361fc4f5b45250513199f46f352b7e4669e");
 
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -779,8 +780,10 @@ CChainParams& Params(const std::string& chain)
             return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
             return testNetParams;
-        else if (chain == CBaseChainParams::TESTNET60X)
+#ifdef ENERGI_ENABLE_TESTNET_60X
+    else if (chain == CBaseChainParams::TESTNET60X)
             return testNet60xParams;
+#endif
     else if (chain == CBaseChainParams::REGTEST)
             return regTestParams;
     else

@@ -52,7 +52,7 @@ namespace
 
     struct CBlockHeaderFullLE : public CBlockHeaderTruncatedLE
     {
-        uint32_t nNonce;
+        uint64_t nNonce;
         char hashMix[65];
 
         CBlockHeaderFullLE(CBlockHeader const & h)
@@ -64,7 +64,7 @@ namespace
             memcpy(hashMix, mixString.c_str(), (std::min)(mixString.size(), sizeof(hashMix)));
         }
     };
-    static_assert(sizeof(CBlockHeaderFullLE) == 215, "CBlockHeaderFullLE has incorrect size");
+    static_assert(sizeof(CBlockHeaderFullLE) == 219, "CBlockHeaderFullLE has incorrect size");
     #pragma pack(pop)
 }
 
@@ -120,8 +120,9 @@ uint256 CBlockHeader::GetHash() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nHeight=%u, hashMix=%s, nNonce=%u, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, hashPow=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nHeight=%u, hashMix=%s, nNonce=%u, vtx=%u)\n",
         GetHash().ToString(),
+        GetPOWHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashMerkleRoot.ToString(),

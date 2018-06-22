@@ -331,37 +331,19 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            ( 0, uint256S("0x0")),
-            0,
-            0,
-            0
-            /*
-            (  1500, uint256S("0x000000aaf0300f59f49bc3e970bad15c11f961fe2347accffff19d96ec9778e3"))
-            (  4991, uint256S("0x000000003b01809551952460744d5dbb8fcbd6cbae3c220267bf7fa43f837367"))
-            (  9918, uint256S("0x00000000213e229f332c0ffbe34defdaa9e74de87f2d8d1f01af8d121c3c170b"))
-            ( 16912, uint256S("0x00000000075c0d10371d55a60634da70f197548dbbfa4123e12abfcbc5738af9"))
-            ( 23912, uint256S("0x0000000000335eac6703f3b1732ec8b2f89c3ba3a7889e5767b090556bb9a276"))
-            ( 35457, uint256S("0x0000000000b0ae211be59b048df14820475ad0dd53b9ff83b010f71a77342d9f"))
-            ( 45479, uint256S("0x000000000063d411655d590590e16960f15ceea4257122ac430c6fbe39fbf02d"))
-            ( 55895, uint256S("0x0000000000ae4c53a43639a4ca027282f69da9c67ba951768a20415b6439a2d7"))
-            ( 68899, uint256S("0x0000000000194ab4d3d9eeb1f2f792f21bb39ff767cb547fe977640f969d77b7"))
-            ( 74619, uint256S("0x000000000011d28f38f05d01650a502cc3f4d0e793fbc26e2a2ca71f07dc3842"))
-            ( 75095, uint256S("0x0000000000193d12f6ad352a9996ee58ef8bdc4946818a5fec5ce99c11b87f0d"))
-            ( 88805, uint256S("0x00000000001392f1652e9bf45cd8bc79dc60fe935277cd11538565b4a94fa85f"))
-            ( 107996, uint256S("0x00000000000a23840ac16115407488267aa3da2b9bc843e301185b7d17e4dc40"))
-            ( 137993, uint256S("0x00000000000cf69ce152b1bffdeddc59188d7a80879210d6e5c9503011929c3c"))
-            ( 167996, uint256S("0x000000000009486020a80f7f2cc065342b0c2fb59af5e090cd813dba68ab0fed"))
-            ( 207992, uint256S("0x00000000000d85c22be098f74576ef00b7aa00c05777e966aff68a270f1e01a5"))
-            ( 312645, uint256S("0x0000000000059dcb71ad35a9e40526c44e7aae6c99169a9e7017b7d84b1c2daf"))
-            ( 407452, uint256S("0x000000000003c6a87e73623b9d70af7cd908ae22fee466063e4ffc20be1d2dbc"))
-            ( 523412, uint256S("0x000000000000e54f036576a10597e0e42cc22a5159ce572f999c33975e121d4d"))
-            ( 523930, uint256S("0x0000000000000bccdb11c2b1cfb0ecab452abf267d89b7f46eaf2d54ce6e652c"))
-            ( 750000, uint256S("0x00000000000000b4181bbbdddbae464ce11fede5d0292fb63fdede1e7c8ab21c")),
-            1507424630, // * UNIX timestamp of last checkpoint block
-            3701128,    // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            5000        // * estimated number of transactions per day after checkpoint
-            */
+
+            (  10000, uint256S("0x9e7d44bb9b9d8e0ad655477c7fd753d11df321a889835c9b940a2342d8e43f3c"))
+            (  20000, uint256S("0x56e3033c6e8d56c073d5cd0b7ea59f70ec075fa6660054e2a67bfcdc853d8cb9"))
+            (  30000, uint256S("0x90f9c4d79134f8e8aa8a64181ebebeadc4914d982dc56d81b40b0d9c04e14132"))
+            (  32000, uint256S("0x423d1fcaef88449d94a74b803055f165b1b2c677e10487e63cf3a55b53cff82a"))
+            (  50000, uint256S("0x0823370fb037369fcbf28e0de607733bbad1133343c58674a48654dfa690b15c"))
+            (  75000, uint256S("0x50b98feae42b5acdd36c5f75582e4eb9780a5ae0901992985b9aaf58ba6e4e71"))
+            (  94800, uint256S("0x8cddf9609d578281ed60a79900522f45c4eab1406f336d2109c61619c370828f")),
+
+            1529671563,     // * UNIX timestamp of last checkpoint block
+            100461,         // * total number of transactions between genesis and last checkpoint
+                            //   (the tx=... number in the SetBestChain debug.log lines)
+            1563,           // * estimated number of transactions per day after checkpoint
         };
     }
 };
@@ -376,7 +358,7 @@ public:
         strNetworkID = "test";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -404,7 +386,7 @@ public:
         consensus.nSpecialTreasuryBudget = 400000000000000ULL + consensus.nRegularTreasuryBudget; // 4 million extra coins for the special budget cycle
         consensus.nSpecialTreasuryBudgetBlock = consensus.nSuperblockCycle * 50;
 
-        consensus.nMasternodePaymentsStartBlock = 216000; // should be about 150 days after genesis
+        consensus.nMasternodePaymentsStartBlock = 21600; // should be about 15 days after genesis
         consensus.nInstantSendKeepLock = 6;
         consensus.nBudgetProposalEstablishingTime = 60*60;
         consensus.nGovernanceMinQuorum = 1;
@@ -413,7 +395,7 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
-        consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 24 * 60 * 60; // in seconds -> Energi: 1 day
         consensus.nPowTargetSpacing = 60; // in seconds Energi: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -439,12 +421,12 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1523717022, 15936860, 0x1e0ffff0, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1524344801, 16880322, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x077543181470a3e54f815d07072387f46236e2e92a2f0e14a3c1e02f25d1ea97");
-        uint256 expectedGenesisMerkleRoot = uint256S("0xce737517317ef573bb17f34c49e10fa30357983f29821f129a99fe3cb90e34c4");
+        uint256 expectedGenesisHash = uint256S("0xee84bfa5f6cafe2ba7f164cee0c33ec63aca76edffa4e8e94656a9be2262cf74");
+        uint256 expectedGenesisMerkleRoot = uint256S("0x34e077f3b96691e4f1aea04061ead361fc4f5b45250513199f46f352b7e4669e");
 
         // TODO: mine genesis block for testnet
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -490,18 +472,21 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            ( 0, uint256S("0x440cbbe939adba25e9e41b976d3daf8fb46b5f6ac0967b0a9ed06a749e7cf1e2")),
-			0, // * UNIX timestamp of last checkpoint block
-            0,     // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0         // * estimated number of transactions per day after checkpoint
+            (  1000, uint256S("0x48357913ab6aeff3ac5d8a7120cdf991ca7b598f40c30efbc66b32ce343c8596"))
+            (  5000, uint256S("0x50d6318ae28e2d46d3aa5ecb4a7566ec3e9f8b9542e9a84a744d3c8eb815f405"))
+            (  9000, uint256S("0x263bb5d663abbbff11318d82c93249c63523f6b48535f81acf194e45e353be59a")),
+
+            1526823627,     // * UNIX timestamp of last checkpoint block
+            9049,           // * total number of transactions between genesis and last checkpoint
+                            //   (the tx=... number in the SetBestChain debug.log lines)
+            1440,           // * estimated number of transactions per day after checkpoint
         };
 
     }
 };
 static CTestNetParams testNetParams;
 
-
+#ifdef ENERGI_ENABLE_TESTNET_60X
 /**
  * Testnet (60x)
  */
@@ -511,7 +496,7 @@ public:
         strNetworkID = "test60";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("22af89cb590829ae00a927deb2efbf81954c6840") << OP_EQUALVERIFY << OP_CHECKSIG;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -634,6 +619,7 @@ public:
     }
 };
 static CTestNet60xParams testNet60xParams;
+#endif
 
 /**
  * Regression test
@@ -644,7 +630,7 @@ public:
         strNetworkID = "regtest";
 
         // Energi distribution parameters
-        consensus.energiBackboneScript = CScript() << OP_HASH160 << ParseHex("b27ae40d9e9917130210894e50e99f26968faaa4") << OP_EQUAL;
+        consensus.energiBackboneScript = CScript() << OP_DUP << OP_HASH160 << ParseHex("b506a5b17506bab7a7e68ee557046d64a01a6f0d") << OP_EQUALVERIFY << OP_CHECKSIG;
 
         // Seeing as there are 526,000 blocks per year, and there is a 12M annual emission
         // masternodes get 40% of all coins or 4.8M / 526,000 ~ 9.14
@@ -713,11 +699,11 @@ public:
         nDefaultPort = 39797;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1523717273, 11, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
+        genesis = CreateGenesisBlock(1524279488, 12, 0x207fffff, 1, consensus.nBlockSubsidyBackbone + consensus.nBlockSubsidyMiners);
         bool const valid_genesis_pow = GenesisCheckProofOfWork(genesis.GetPOWHash(), genesis.nBits, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        uint256 expectedGenesisHash = uint256S("0x20c0f2eebd83df69a4a508649306089cbd03963d1c6e0664d7593a9dd9f8815d");
+        uint256 expectedGenesisHash = uint256S("0x378abe3d42888769177494063edd42e6c3925e938ff8f73c71a6b6ad5b293ea7");
         uint256 expectedGenesisMerkleRoot = uint256S("0x34e077f3b96691e4f1aea04061ead361fc4f5b45250513199f46f352b7e4669e");
 
         #ifdef ENERGI_MINE_NEW_GENESIS_BLOCK
@@ -779,8 +765,10 @@ CChainParams& Params(const std::string& chain)
             return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
             return testNetParams;
-        else if (chain == CBaseChainParams::TESTNET60X)
+#ifdef ENERGI_ENABLE_TESTNET_60X
+    else if (chain == CBaseChainParams::TESTNET60X)
             return testNet60xParams;
+#endif
     else if (chain == CBaseChainParams::REGTEST)
             return regTestParams;
     else

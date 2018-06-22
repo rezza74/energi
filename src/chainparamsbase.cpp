@@ -13,14 +13,18 @@
 
 const std::string CBaseChainParams::MAIN = "main";
 const std::string CBaseChainParams::TESTNET = "test";
+#ifdef ENERGI_ENABLE_TESTNET_60X
 const std::string CBaseChainParams::TESTNET60X = "test60";
+#endif
 const std::string CBaseChainParams::REGTEST = "regtest";
 
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
     strUsage += HelpMessageGroup(_("Chain selection options:"));
     strUsage += HelpMessageOpt("-testnet", _("Use the test chain"));
+    #ifdef ENERGI_ENABLE_TESTNET_60X
     strUsage += HelpMessageOpt("-testnet60x", _("Use the 60x test chain, which is essentially 60 times faster, in terms of emission and governance"));
+    #endif
     if (debugHelp) {
         strUsage += HelpMessageOpt("-regtest", "Enter regression test mode, which uses a special chain in which blocks can be solved instantly. "
                                    "This is intended for regression testing tools and app development.");
@@ -54,6 +58,7 @@ public:
 };
 static CBaseTestNetParams testNetParams;
 
+#ifdef ENERGI_ENABLE_TESTNET_60X
 /**
  * Testnet (60x)
  * Represents the 60x faster testnet, in terms of emission and governance testing
@@ -68,6 +73,7 @@ public:
     }
 };
 static CBaseTestNet60xParams testNet60xParams;
+#endif
 
 /*
  * Regression test
@@ -97,8 +103,10 @@ CBaseChainParams& BaseParams(const std::string& chain)
         return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
         return testNetParams;
-     else if (chain == CBaseChainParams::TESTNET60X)
+#ifdef ENERGI_ENABLE_TESTNET_60X
+    else if (chain == CBaseChainParams::TESTNET60X)
         return testNet60xParams;
+#endif
     else if (chain == CBaseChainParams::REGTEST)
         return regTestParams;
     else
@@ -114,17 +122,26 @@ std::string ChainNameFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
     bool fTestNet = GetBoolArg("-testnet", false);
+
+    #ifdef ENERGI_ENABLE_TESTNET_60X
     bool fTestNet60x = GetBoolArg("-testnet60x", false);
 
-    // special build - default to testnet binaries
     if ((fTestNet && fRegTest && fTestNet60x) || (fTestNet && fRegTest) || (fTestNet60x && fRegTest) || (fTestNet && fTestNet60x))
         throw std::runtime_error("Invalid combination of -regtest, -testnet and/or -testnet60x. Can't be used together.");
+
+    if (fTestNet60x)
+        return CBaseChainParams::TESTNET60X;
+    #endif
+
+
+    if (fTestNet && fRegTest)
+        throw std::runtime_error("Invalid combination of -regtest and -testnet. Can't be used together.");
+
     if (fRegTest)
         return CBaseChainParams::REGTEST;
     if (fTestNet)
         return CBaseChainParams::TESTNET;
-    if (fTestNet60x)
-        return CBaseChainParams::TESTNET60X;
+
     return CBaseChainParams::MAIN;
 }
 

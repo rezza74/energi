@@ -18,7 +18,9 @@ public:
     /** BIP70 chain name strings (main, test or regtest) */
     static const std::string MAIN;
     static const std::string TESTNET;
+    #ifdef ENERGI_ENABLE_TESTNET_60X
     static const std::string TESTNET60X;
+    #endif
     static const std::string REGTEST;
 
     const std::string& DataDir() const { return strDataDir; }

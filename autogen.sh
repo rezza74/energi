@@ -25,6 +25,7 @@ elif which apt-get >/dev/null 2>&1; then
     deb_list="${deb_list} libdb4.8-dev libdb4.8++-dev"
     deb_list="${deb_list} lcov default-jre-headless"
     deb_list="${deb_list} ccache"
+    deb_list="${deb_list} clang-5.0"
     
     if [ "$TARGET" = "x86_64-w64-mingw32" ]; then
         deb_list="${deb_list} mingw-w64 wine64 wine-binfmt"

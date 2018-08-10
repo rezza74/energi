@@ -54,9 +54,9 @@ elif which apt-get >/dev/null 2>&1; then
     fi
     
     pip_install() {
-        ( which futoin-cid && cd $srcdir && cte pip install "$@" )
+        ( which futoin-cid && cd $srcdir && CC=gcc CXX=g++ cte pip install "$@" )
 
-        /usr/bin/pip install --user "$@"
+        CC=gcc CXX=g++ /usr/bin/pip install --user "$@"
     }
 
     echo 'import dash_hash' | /usr/bin/env python - >/dev/null 2>&1 || \

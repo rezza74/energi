@@ -55,6 +55,9 @@ Environment variables (direct usage is **DISCOURAGED**):
 
 Extends commands (not part of standard CID prepare-build-check-package-promote flow):
 
+* Cleaning:
+    * `cid run clean` - clean everything except for `depends` folder.
+    * `cid run full-clean` - clean everything.
 * Preparation variations:
     * `cid run prepare-release` - same as plain `cid prepare` with forced environment config.
     * `cid run prepare-debug` - prepare a Debug configuration.

@@ -27,7 +27,7 @@ elif which apt-get >/dev/null 2>&1; then
     deb_list="${deb_list} ccache"
     deb_list="${deb_list} clang-5.0"
     
-    if [ "$TARGET" = "x86_64-w64-mingw32" ]; then
+    if [ "$HOST" = "x86_64-w64-mingw32" ]; then
         deb_list="${deb_list} mingw-w64 wine64 wine-binfmt"
     fi
     
@@ -67,7 +67,7 @@ fi
 
 autoreconf --install --force --warnings=all $srcdir
 
-if [ "$TARGET" = "x86_64-w64-mingw32" ]; then
+if [ "$HOST" = "x86_64-w64-mingw32" ]; then
     echo "Preparing Win64 deps"
     make -C $srcdir/depends HOST=x86_64-w64-mingw32 -j${MAKEJOBS:-$(nproc)}
 fi

@@ -8,7 +8,8 @@
     "python": "3"
   },
   "actions": {
-    "clean" : "cte git clean -ffdX . || true",
+    "clean" : "cte git clean -ffdx -e depends/ . || true",
+    "full-clean" : "cte git clean -ffdx . || true",
     "prepare": [
       "cte cmake -E make_directory ${ENERGI_BUILD_DIR:-build/$(hostname -s)-release}",
       "cte cmake -E create_symlink ${ENERGI_BUILD_DIR:-$(pwd)/build/$(hostname -s)-release} build/current",

@@ -70,6 +70,23 @@ elif which apt-get >/dev/null 2>&1; then
     echo 'import dash_hash' | /usr/bin/env python - >/dev/null 2>&1 || \
         pip_install git+https://github.com/dashpay/dash_hash
     pip_install pyzmq
+elif which brew >/dev/null 2>&1; then
+    brew_list=""
+    brew_list="${brew_list} ccache"
+    
+    for f in $brew_list; do
+        brew install $f || true
+    done
+    
+    pip_install() {
+        ( which futoin-cid && cd $srcdir && cte pip install "$@" )
+
+        /usr/local/bin/pip install --user "$@"
+    }
+
+    echo 'import dash_hash' | /usr/bin/env python - >/dev/null 2>&1 || \
+        pip_install git+https://github.com/dashpay/dash_hash
+    pip_install pyzmq
 fi
 
 autoreconf --install --force --warnings=all $srcdir
@@ -78,6 +95,9 @@ if [ "$HOST" = "x86_64-w64-mingw32" ]; then
     # TODO: create a separate Energi SDK
     echo "Preparing Win64 deps"
     make -C $srcdir/depends HOST=x86_64-w64-mingw32 -j${MAKEJOBS:-$(nproc)}
-    cp -rau $srcdir/depends/x86_64-w64-mingw32/* $srcdir/build/${ENERGI_VER:-energi}
+    
+    install_dir=$srcdir/build/${ENERGI_VER:-energi}
+    mkdir -p $install_dir
+    cp -rau $srcdir/depends/x86_64-w64-mingw32/* $install_dir
 fi
 

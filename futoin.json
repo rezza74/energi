@@ -33,7 +33,7 @@
     "check-make": "cte make -C ${ENERGI_BUILD_DIR:-build/current} check",
     "check-cpp": [
         "cte cmake -E make_directory ./test_results",
-        "./build/${ENERGI_VER:-energi}/bin/test_energi${EXT_EXT} --log_format=XML --log_level=warning --log_sink=./test_results/results.xml --report_format=XML --report_level=detailed --report_sink=./test_results/report.xml --result_code=no",
+        "./build/${ENERGI_VER:-energi}/bin/test_energi${EXE_EXT} --log_format=XML --log_level=warning --log_sink=./test_results/results.xml --report_format=XML --report_level=detailed --report_sink=./test_results/report.xml --result_code=no",
         "./build/${ENERGI_VER:-energi}/bin/test_energi-qt${EXE_EXT} -xml -o ./test_results/test_energi-qt.xml"
     ],
     "check-rpc": "cte python qa/pull-tester/rpc-tests.py",

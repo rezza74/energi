@@ -75,8 +75,9 @@ fi
 autoreconf --install --force --warnings=all $srcdir
 
 if [ "$HOST" = "x86_64-w64-mingw32" ]; then
+    # TODO: create a separate Energi SDK
     echo "Preparing Win64 deps"
     make -C $srcdir/depends HOST=x86_64-w64-mingw32 -j${MAKEJOBS:-$(nproc)}
-    cp -rau $srcdir/depends/x86_64-w64-mingw32/* $srcdir/build/current/
+    cp -rau $srcdir/depends/x86_64-w64-mingw32/* $srcdir/build/${ENERGI_VER:-energi}
 fi
 

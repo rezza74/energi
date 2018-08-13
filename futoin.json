@@ -37,10 +37,7 @@
         "./build/${ENERGI_VER:-energi}/bin/test_energi-qt${EXE_EXT} -xml -o ./test_results/test_energi-qt.xml"
     ],
     "check-rpc": "cte python qa/pull-tester/rpc-tests.py",
-    "package" : [
-        "cte make -C ${ENERGI_BUILD_DIR:-build/current} install deploy",
-        "cte cmake -E chdir build cte tar cvzf ${ENERGI_VER:-energi}.tar.gz ${ENERGI_VER:-energi}"
-    ],
+    "package" : "cte make -C ${ENERGI_BUILD_DIR:-build/current} deploy",
     "energid" : "build/${ENERGI_VER:-energi}/bin/energid",
     "energi-cli" : "build/${ENERGI_VER:-energi}/bin/energi-cli",
     "energi-qt" : "build/${ENERGI_VER:-energi}/bin/energi-qt"

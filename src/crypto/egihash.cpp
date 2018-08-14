@@ -581,6 +581,39 @@ namespace egihash
 		get_cache_cache().erase(epoch());
 	}
 
+	/**
+	 * Erase all dangling cache entries except for the last N epochs
+	 */
+	void cleanup_cache_cache()
+	{
+		using namespace std;
+		lock_guard<recursive_mutex> lock(get_cache_cache_mutex());
+
+		auto &cache = get_cache_cache();
+		vector<uint64_t> candidates;
+
+		for (const auto &v: cache) {
+			if (v.second.use_count() <= 1) {
+				candidates.push_back(v.first);
+			}
+		}
+
+		constexpr auto EPOCHS_TO_KEEP = 3;
+
+		if ( candidates.size() <= EPOCHS_TO_KEEP) {
+			return;
+		}
+
+		sort(begin(candidates), end(candidates));
+		candidates.resize(candidates.size() - EPOCHS_TO_KEEP);
+
+		EGIHASH_DEBUG("Erasing " << candidates.size() << " dangling caches")
+
+		for ( auto c : candidates ) {
+			cache.erase( c );
+		}
+	}
+
 	::std::shared_ptr<cache_t::impl_t> get_cache_from_cache(uint64_t const block_number, progress_callback_type callback)
 	{
 		using namespace std;
@@ -592,7 +625,7 @@ namespace egihash
 			auto const cache_cache_iterator = get_cache_cache().find(epoch_number);
 			if (cache_cache_iterator != get_cache_cache().end())
 			{
-				EGIHASH_DEBUG("cache re-use for epoch " << epoch_number << " block " << block_number)
+				//EGIHASH_DEBUG("cache re-use for epoch " << epoch_number << " block " << block_number)
 				return cache_cache_iterator->second;
 			}
 		}
@@ -610,6 +643,7 @@ namespace egihash
 		if (insert_pair.second)
 		{
 			EGIHASH_DEBUG("inserted cache size " << impl->size)
+			cleanup_cache_cache();
 			return insert_pair.first->second;
 		}
 

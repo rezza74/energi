@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
         
         node.vm.provision 'debugger', type: "shell", inline:\
             "apt-get install -y gdb gdbserver valgrind;"\
-            "pip install gdbgui"
+            "/usr/bin/pip3 install gdbgui"
 
         node.vm.provision 'bashrc', type: "shell", inline:\
             "ensure_bashrc() { grep -q \"$@\" /home/vagrant/.bashrc || (echo \"$@\" >> /home/vagrant/.bashrc )};"\

@@ -198,12 +198,6 @@ if test "x$enable_debug" = xyes; then
     fi
 fi
 
-## TODO: Remove these hard-coded paths and flags. They are here for the sake of
-##       compatibility with the legacy buildsystem.
-##
-if test "x$CXXFLAGS_overridden" = "xno"; then
-  CXXFLAGS="$CXXFLAGS -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter -Wno-self-assign -Wno-implicit-fallthrough"
-fi
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
@@ -461,6 +455,18 @@ if test x$TARGET_OS != xwindows; then
   # All windows code is PIC, forcing it on just adds useless compile warnings
   AX_CHECK_COMPILE_FLAG([-fPIC],[PIC_FLAGS="-fPIC"])
 fi
+
+WARN_TMP="-Wall -Wextra"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+WARN_TMP="-Wformat -Wformat-security -Wno-unused-parameter -Wno-self-assign -Wno-implicit-fallthrough"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+# TODO: uncomment
+#WARN_TMP="-Werror"
+#AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+WARN_CXXFLAGS="$WARN_CFLAGS"
 
 if test x$use_hardening != xno; then
   AX_CHECK_COMPILE_FLAG([-Wstack-protector],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -Wstack-protector"])
@@ -1034,6 +1040,8 @@ AC_SUBST(CLIENT_VERSION_IS_RELEASE, _CLIENT_VERSION_IS_RELEASE)
 AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 
 AC_SUBST(RELDFLAGS)
+AC_SUBST(WARN_CFLAGS)
+AC_SUBST(WARN_CXXFLAGS)
 AC_SUBST(HARDENED_CXXFLAGS)
 AC_SUBST(HARDENED_CPPFLAGS)
 AC_SUBST(HARDENED_LDFLAGS)

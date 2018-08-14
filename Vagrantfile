@@ -62,10 +62,10 @@ Vagrant.configure("2") do |config|
         VM_ENERGICORE_DATA = ENV.fetch('VM_ENERGICORE_DATA', '../energicore_vagrant_data')
         FileUtils.mkdir_p VM_ENERGICORE_DATA
 
-        node.vm.synced_folder(VM_ENERGICORE_DATA, "/home/vagrant/.energicore",
-            type: 'virtualbox',
-            owner: 'vagrant', group: 'vagrant',
-            create: true
-        )
+        #node.vm.synced_folder(VM_ENERGICORE_DATA, "/home/vagrant/.energicore",
+        #    type: 'virtualbox',
+        #    owner: 'vagrant', group: 'vagrant',
+        #    create: true
+        #)
     end
 end

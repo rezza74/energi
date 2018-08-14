@@ -12,8 +12,16 @@ Vagrant.configure("2") do |config|
         end
         node.vm.box = "bento/ubuntu-18.04"
 
+        # gdbserver
+        node.vm.network "forwarded_port", guest: 2000, host: 2000, host_ip: "127.0.0.1"
+        # mainnet
+        node.vm.network "forwarded_port", guest: 9797, host: 9797, host_ip: "0.0.0.0"
+        # mainnet RPC
+        node.vm.network "forwarded_port", guest: 9796, host: 9796, host_ip: "127.0.0.1"
+        # testnet
+        node.vm.network "forwarded_port", guest: 19797, host: 19797, host_ip: "0.0.0.0"
+        # testnet RPC
         node.vm.network "forwarded_port", guest: 19796, host: 19796, host_ip: "127.0.0.1"
-        #node.vm.network "forwarded_port", guest: 9999, host: 9999, host_ip: "127.0.0.1"
 
         node.vm.provision 'libdb4', type: "shell", inline:\
             "add-apt-repository ppa:bitcoin/bitcoin;"\
@@ -33,10 +41,17 @@ Vagrant.configure("2") do |config|
             "echo 'nodm    nodm/enabled    boolean true' | debconf-set-selections;"\
             "apt-get install -y --no-install-recommends xorg fluxbox nodm;"
         
+        node.vm.provision 'debugger', type: "shell", inline:\
+            "apt-get install -y gdb gdbserver valgrind;"\
+            "pip install gdbgui"
+
         node.vm.provision 'bashrc', type: "shell", inline:\
             "ensure_bashrc() { grep -q \"$@\" /home/vagrant/.bashrc || (echo \"$@\" >> /home/vagrant/.bashrc )};"\
             "ensure_bashrc 'cd /vagrant';"\
-            "ensure_bashrc  'export DISPLAY=\":0\"';"
+            "ensure_bashrc 'export DISPLAY=\":0\"';"\
+            "ensure_bashrc 'export GDBSERVER_COMM=0.0.0.0:2000';"\
+            "ensure_bashrc 'export GDBGUI_HOST=0.0.0.0';"\
+            "ensure_bashrc 'export GDBGUI_PORT=2000';"
         
         node.vm.synced_folder(".", "/vagrant",
             type: 'virtualbox',

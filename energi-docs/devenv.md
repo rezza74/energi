@@ -42,6 +42,17 @@ Paths relative to project root:
 * `futoin.json` - a single place to configure FutoIn CID
 * The rest is project source. All other build files may change or disappear over time.
 
+## Debugging
+
+By default, `gdbgui` is suggested as simple solution. It can be started with
+`cid run gdbgui-{entrypoint}` (e.g. `cid run gdbgui-energid`).
+
+However, Developers are free to choose any GDB frontend. `gdbserver` integration is
+provided for VM using `cid run gdbserver-{entrypoint}`.
+
+Both options utilize the same default port 2000 on localhost.
+
+
 ## Advanced usage
 
 **NOTE: this section may change over time: env vars may disappear, separate build type may

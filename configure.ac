@@ -456,18 +456,30 @@ if test x$TARGET_OS != xwindows; then
   AX_CHECK_COMPILE_FLAG([-fPIC],[PIC_FLAGS="-fPIC"])
 fi
 
-WARN_TMP="-Wall -Wextra"
+# Enabled warnings
+#---
+WARN_TMP="-Wall -Wextra -Wno-unused-parameter"
 AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
-WARN_TMP="-Wformat -Wformat-security -Wno-unused-parameter -Wno-self-assign -Wno-implicit-fallthrough"
+WARN_TMP="-Wformat -Wformat-security"
 AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
-# TODO: uncomment
-#WARN_TMP="-Werror"
-#AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+WARN_TMP="-Wno-self-assign -Wno-implicit-fallthrough"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
+WARN_TMP="-Wdate-time"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+# Force warnings as error
+#---
+WARN_TMP="-Werror"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+# C++-specific warnings
+#---
 WARN_CXXFLAGS="$WARN_CFLAGS"
 
+#---
 if test x$use_hardening != xno; then
   AX_CHECK_COMPILE_FLAG([-Wstack-protector],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -Wstack-protector"])
   AX_CHECK_COMPILE_FLAG([-fstack-protector-all],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protector-all"])

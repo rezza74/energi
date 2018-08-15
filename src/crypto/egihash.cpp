@@ -114,24 +114,6 @@ namespace
 	static_assert(dag_file_header_t::magic_size == 12, "Magic size invalid.");
 	static_assert(sizeof(dag_file_header_t) == 64, "Dag header size invalid.");
 
-	inline uint32_t decode_int(uint8_t const * data, uint8_t const * dataEnd) noexcept
-	{
-		if (!data || (dataEnd < (data + 3)))
-			return 0;
-
-		return static_cast<uint32_t>(
-			(static_cast<uint32_t>(data[3]) << 24) |
-			(static_cast<uint32_t>(data[2]) << 16) |
-			(static_cast<uint32_t>(data[1]) << 8) |
-			(static_cast<uint32_t>(data[0]))
-		);
-	}
-
-	inline ::std::string zpad(::std::string const & str, size_t const length)
-	{
-		return str + ::std::string(::std::max(length - str.length(), static_cast<::std::string::size_type>(0)), 0);
-	}
-
 	template <typename IntegralType >
 	typename ::std::enable_if<::std::is_integral<IntegralType>::value, ::std::string>::type
 	/*::std::string*/ encode_int(IntegralType x)

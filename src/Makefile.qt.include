@@ -544,12 +544,15 @@ $(QT_MOC_CPP): $(PROTOBUF_H)
 
 # energi-qt binary #
 qt_energi_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(ENERGI_PCH_CPPFLAGS)
+  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
 qt_energi_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_energi_qt_SOURCES = qt/energi.cpp
 if TARGET_DARWIN
   qt_energi_qt_SOURCES += $(BITCOIN_MM)
+else
+# TODO: improve OBJCXX-related PCH
+  qt_energi_qt_CPPFLAGS += $(ENERGI_PCH_CPPFLAGS)
 endif
 if TARGET_WINDOWS
   qt_energi_qt_SOURCES += $(BITCOIN_RC)

@@ -92,12 +92,12 @@
 //#include <boost/shared_ptr.hpp>
 #ifndef WIN32
 // Produces warning
-#include <boost/signals2/last_value.hpp>
+//#include <boost/signals2/last_value.hpp>
 #endif
 //#include <boost/signals2/signal.hpp>
 #ifndef WIN32
 // Produces warning
-#include <boost/thread.hpp> // TODO: change to c++11
+//#include <boost/thread.hpp> // TODO: change to c++11
 #endif
 //#include <boost/thread/condition_variable.hpp> // TODO: change to c++11
 //#include <boost/thread/exceptions.hpp>

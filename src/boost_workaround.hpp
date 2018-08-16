@@ -20,6 +20,7 @@
 
 #include <boost/thread.hpp> // TODO: change to c++11
 #include <boost/signals2/last_value.hpp>
+#include <boost/dynamic_bitset.hpp>
 
 #pragma GCC diagnostic pop
 

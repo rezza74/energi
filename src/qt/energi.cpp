@@ -4,9 +4,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
-#include "config/energi-config.h"
-#endif
+#include "energi_all.hpp"
 
 #include "bitcoingui.h"
 

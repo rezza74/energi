@@ -37,7 +37,14 @@ if test "x${CXXFLAGS+set}" = "xset"; then
 else
   CXXFLAGS_overridden=no
 fi
-AC_PROG_CXX
+
+AC_PROG_CXX([clang++-5.0 clang++-6.0 clang++-7.0 clang++ g++])
+AC_PROG_CC([clang-5.0 clang-6.0 clang-7.0 clang gcc])
+
+AC_COMPILE_IFELSE([AC_LANG_DEFINES_PROVIDED
+int main(){ return __clang__; }], [CLANG=yes], [CLANG=no])
+AM_CONDITIONAL([IS_GCC],[test x$GCC = xyes && test x$CLANG != xyes])
+AM_CONDITIONAL([IS_CLANG],[test x$CLANG = xyes])
 
 dnl By default, libtool for mingw refuses to link static libs into a dll for
 dnl fear of mixing pic/non-pic objects, and import/export complications. Since
@@ -197,6 +204,13 @@ if test "x$enable_debug" = xyes; then
         CXXFLAGS="$CXXFLAGS -g3 -O0"
     fi
 fi
+
+AC_ARG_ENABLE([pch],
+  [AS_HELP_STRING([--disable-pch],
+  [disable use of PreCompiled Header])],
+  [use_zmq=$enableval],
+  [use_zmq=yes])
+AM_CONDITIONAL([ENABLE_PCH],[test x$use_zmq = xyes])
 
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
@@ -456,18 +470,36 @@ if test x$TARGET_OS != xwindows; then
   AX_CHECK_COMPILE_FLAG([-fPIC],[PIC_FLAGS="-fPIC"])
 fi
 
-WARN_TMP="-Wall -Wextra"
+# Enabled warnings
+#---
+WARN_TMP="-Wall -Wextra -Wno-unused-parameter"
 AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
-WARN_TMP="-Wformat -Wformat-security -Wno-unused-parameter -Wno-self-assign -Wno-implicit-fallthrough"
+WARN_TMP="-Wformat -Wformat-security"
 AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
-# TODO: uncomment
-#WARN_TMP="-Werror"
+WARN_TMP="-Wno-self-assign -Wno-implicit-fallthrough"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+WARN_TMP="-Wdate-time"
+AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+
+#WARN_TMP="-Winvalid-pch"
 #AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
 
+# Force warnings as error
+#---
+# TODO: fix Darwin build issues
+if test x$TARGET_OS != xdarwin; then
+	WARN_TMP="-Werror"
+	AX_CHECK_COMPILE_FLAG([$WARN_TMP],[WARN_CFLAGS="$WARN_CFLAGS $WARN_TMP"])
+fi
+
+# C++-specific warnings
+#---
 WARN_CXXFLAGS="$WARN_CFLAGS"
 
+#---
 if test x$use_hardening != xno; then
   AX_CHECK_COMPILE_FLAG([-Wstack-protector],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -Wstack-protector"])
   AX_CHECK_COMPILE_FLAG([-fstack-protector-all],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protector-all"])

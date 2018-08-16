@@ -17,8 +17,8 @@ TEST_QT_H = \
   qt/test/paymentservertests.h \
   qt/test/trafficgraphdatatests.h
 
-qt_test_test_energi_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(QT_TEST_INCLUDES) $(PROTOBUF_CFLAGS)
+qt_test_test_energi_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS) $(BITCOIN_QT_INCLUDES) \
+  $(QT_INCLUDES) $(QT_TEST_INCLUDES) $(PROTOBUF_CFLAGS) $(ENERGI_PCH_CPPFLAGS)
 
 qt_test_test_energi_qt_SOURCES = \
   qt/test/compattests.cpp \
@@ -31,7 +31,11 @@ qt_test_test_energi_qt_SOURCES += \
   qt/test/paymentservertests.cpp
 endif
 
+$(qt_test_test_energi_qt_SOURCES): $(ENERGI_PCH)
+
 nodist_qt_test_test_energi_qt_SOURCES = $(TEST_QT_MOC_CPP)
+
+$(nodist_qt_test_test_energi_qt_SOURCES): $(ENERGI_PCH)
 
 qt_test_test_energi_qt_LDADD = $(LIBBITCOINQT) $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET

@@ -43,6 +43,10 @@
 
 #include <sstream>
 
+#ifdef WIN32
+#   define BOOST_USE_WINDOWS_H
+#endif
+
 #include "boost_workaround.hpp"
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>

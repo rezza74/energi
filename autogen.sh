@@ -92,6 +92,10 @@ fi
 autoreconf --install --force --warnings=all $srcdir
 
 if [ "$HOST" = "x86_64-w64-mingw32" ]; then
+	# Need to update alternatives, ignore failure
+	sudo -n update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix || true
+	sudo -n update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix || true
+
     # TODO: create a separate Energi SDK
     echo "Preparing Win64 deps"
     make -C $srcdir/depends HOST=x86_64-w64-mingw32 -j${MAKEJOBS:-$(nproc)}

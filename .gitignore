@@ -25,6 +25,7 @@ src/qt/test/test_dash-qt
 src/bench/bench_dash
 
 # autoreconf
+Makefile.new.am
 Makefile.in
 aclocal.m4
 autom4te.cache/

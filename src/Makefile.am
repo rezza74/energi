@@ -14,8 +14,7 @@ if ENABLE_PCH
 
 if IS_GCC
 ENERGI_PCH_DIR = $(builddir)/energi_all.hpp.gch
-ENERGI_PCH = $(ENERGI_PCH_DIR)/main.gch
-ENERGI_PCH += $(ENERGI_PCH_DIR)/qt.gch
+ENERGI_PCH = $(ENERGI_PCH_DIR).stamp
 ENERGI_PCH_CPPFLAGS = -fpch-preprocess -include $(builddir)/energi_all.hpp
 export CCACHE_IGNOREHEADERS = $(ENERGI_PCH_DIR)
 
@@ -29,6 +28,7 @@ $(ENERGI_PCH): $(srcdir)/energi_all.hpp
 	$(CXXCOMPILE) -x c++-header $(BITCOIN_INCLUDES) $(PIC_FLAGS) $(PIE_FLAGS) \
 	  $(srcdir)/energi_all.hpp -o $(ENERGI_PCH_DIR)/main.gch
 	test "$$CCACHE_SLOPPINESS" = "$(CCACHE_SLOPPINESS)"
+	touch $(ENERGI_PCH)
 endif
 
 if IS_CLANG

@@ -23,6 +23,7 @@
 
 #include "privatesend-client.h"
 
+#include "boost_workaround.hpp"
 #include <boost/thread.hpp>
 
 #include <QDataWidgetMapper>

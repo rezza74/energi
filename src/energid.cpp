@@ -16,6 +16,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 
+#include "boost_workaround.hpp"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>

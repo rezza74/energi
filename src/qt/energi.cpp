@@ -39,6 +39,7 @@
 
 #include <stdint.h>
 
+#include "boost_workaround.hpp"
 #include <boost/filesystem/operations.hpp>
 #include <boost/thread.hpp>
 
